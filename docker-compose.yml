@@ -1,0 +1,20 @@
+version: '3'
+services:
+    db:
+        image: mariadb:10.4
+        container_name: laravel10_db
+        ports:
+            - 3300:3306
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=laravel_10_sandbox
+            - MYSQL_USER=laravel
+            - MYSQL_PASSWORD=laravel
+        volumes:
+            - dbdata:/var/lib/mysql
+            - ./src:/home
+
+
+volumes:
+    dbdata:
+        driver: local
