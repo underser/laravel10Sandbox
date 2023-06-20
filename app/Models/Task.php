@@ -20,4 +20,9 @@ class Task extends Model
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function filename()
+    {
+        return $this->morphOne(Attachment::class, 'attachable');
+    }
 }
