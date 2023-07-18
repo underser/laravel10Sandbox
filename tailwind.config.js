@@ -1,6 +1,8 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
+import colors from 'tailwindcss/colors';
 import forms from '@tailwindcss/forms';
 import typography from '@tailwindcss/typography';
+
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -16,6 +18,12 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                danger: colors.rose,
+                primary: colors.amber,
+                success: colors.green,
+                warning: colors.amber,
+            }
         },
     },
 
