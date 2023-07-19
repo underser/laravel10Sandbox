@@ -1,3 +1,6 @@
+@props([
+    'contentWrapClasses' => ''
+])
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -20,7 +23,7 @@
     <body class="font-sans antialiased">
         <x-banner />
 
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen bg-gray-100 {{ $contentWrapClasses }}">
             @livewire('navigation-menu')
 
             <!-- Page Heading -->
