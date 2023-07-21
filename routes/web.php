@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\CustomersController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,10 +19,7 @@ Route::middleware([
     Route::resource('customers', CustomersController::class)->parameters([
         'customers' => 'user'
     ]);
-
-    Route::get('/clients', function () {
-        return view('crm.admin.clients.index');
-    })->name('clients');
+    Route::resource('clients', ClientsController::class);
 
     Route::get('/projects', function () {
         return view('crm.admin.projects.index');
