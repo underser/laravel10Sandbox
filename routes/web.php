@@ -3,6 +3,7 @@
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\ProjectsController;
+use App\Http\Controllers\TasksController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
@@ -22,9 +23,5 @@ Route::middleware([
     ]);
     Route::resource('clients', ClientsController::class);
     Route::resource('projects', ProjectsController::class);
-
-    Route::get('/tasks', function () {
-        return view('crm.admin.tasks.index');
-    })->name('tasks');
-
+    Route::resource('tasks', TasksController::class);
 });

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Traits\PaginatorDefaults;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,8 +11,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Task extends Model
 {
     use HasFactory;
+    use PaginatorDefaults;
 
     protected $guarded = ['id'];
+
+    public function scopeWithAll(Builder $query): void
+    {
+        $query->with(['project', 'status', 'user']);
+    }
 
     public function project(): BelongsTo
     {
@@ -19,6 +27,11 @@ class Task extends Model
 
     public function status(): BelongsTo
     {
-        return $this->belongsTo(TaskStatus::class);
+        return $this->belongsTo(TaskStatus::class, 'task_status_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
