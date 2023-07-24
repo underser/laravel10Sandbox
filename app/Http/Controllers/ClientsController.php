@@ -21,7 +21,6 @@ class ClientsController extends Controller
         return view('crm.admin.clients.index', [
             'clients' => $clients
         ]);
-
     }
 
     /**
@@ -30,7 +29,6 @@ class ClientsController extends Controller
     public function create()
     {
         return view('crm.admin.clients.create');
-
     }
 
     /**
@@ -59,7 +57,6 @@ class ClientsController extends Controller
         return view('crm.admin.clients.edit', [
             'client' => $client,
         ]);
-
     }
 
     /**
@@ -69,7 +66,6 @@ class ClientsController extends Controller
     {
         $client->update($request->validated());
         return to_route('clients.show', $client);
-
     }
 
     /**
