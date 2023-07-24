@@ -118,9 +118,9 @@
                                             <div class="flex items-center justify-between space-x-2 rtl:space-x-reverse">
                                                 <label class="filament-forms-field-wrapper-label inline-flex items-center space-x-3 rtl:space-x-reverse" for="client_id">
                                                 <span class="text-sm font-medium leading-4 text-gray-700 dark:text-gray-300">
-                                                    {{ __('Moderator') }}
+                                                    {{ __('Client') }}
                                                     <span class="whitespace-nowrap">
-                                                        @error('user_id')
+                                                        @error('client_id')
                                                             <sup class="font-medium text-danger-700 dark:text-danger-400">{{ $message }}</sup>
                                                         @enderror
                                                     </span>
