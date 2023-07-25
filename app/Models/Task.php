@@ -13,6 +13,14 @@ class Task extends Model
     use HasFactory;
     use PaginatorDefaults;
 
+    protected static function booted()
+    {
+        static::addGlobalScope('onlyActiveTasks', function (Builder $builder) {
+            $builder->has('project.client');
+        });
+        parent::booted();
+    }
+
     protected $guarded = ['id'];
 
     public function scopeWithAll(Builder $query): void

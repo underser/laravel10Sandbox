@@ -14,6 +14,14 @@ class Project extends Model
 
     protected $guarded = ['id'];
 
+    protected static function booted()
+    {
+        static::addGlobalScope('onlyActiveProjects', function (Builder $builder) {
+            $builder->has('client');
+        });
+        parent::booted();
+    }
+
     public function scopeWithAll(Builder $query): void
     {
         $query->with(['user', 'client', 'tasks', 'status']);

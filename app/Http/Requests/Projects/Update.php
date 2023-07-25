@@ -31,7 +31,7 @@ class Update extends FormRequest
             ],
             'client_id' => [
                 'sometimes',
-                Rule::exists('clients', 'id')
+                'exists:clients,id,deleted_at,NULL'
             ],
             'project_status_id' => [
                 'sometimes',
