@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('phone');
-            $table->string('country_code');
+            if (!Schema::hasColumns('users', ['phone', 'country_code'])) {
+                $table->string('phone');
+                $table->string('country_code');
+            }
         });
     }
 
