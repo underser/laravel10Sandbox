@@ -66,7 +66,7 @@
                                     <a href="{{ route('projects.show', $project) }}" class="flex w-full justify-start text-start">
                                         <div class="filament-tables-text-column px-4 py-3">
                                             <div class="inline-flex items-center space-x-1 rtl:space-x-reverse">
-                                                {{ $project->deadline }}
+                                                {{ $project->deadline->format('m/d/Y') }}
                                             </div>
                                         </div>
                                     </a>
