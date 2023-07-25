@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\PaginatorDefaults;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,6 +14,8 @@ class Task extends Model
     use HasFactory;
     use PaginatorDefaults;
 
+    protected $guarded = ['id'];
+
     protected static function booted()
     {
         static::addGlobalScope('onlyActiveTasks', function (Builder $builder) {
@@ -21,11 +24,17 @@ class Task extends Model
         parent::booted();
     }
 
-    protected $guarded = ['id'];
-
     public function scopeWithAll(Builder $query): void
     {
         $query->with(['project', 'status', 'user']);
+    }
+
+    protected function estimation(): Attribute
+    {
+        return new Attribute(
+            get: fn(string $value) => $value . 'h',
+            set: fn(string $value) => str_replace('h', '', $value)
+        );
     }
 
     public function project(): BelongsTo

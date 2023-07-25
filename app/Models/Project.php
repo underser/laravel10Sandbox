@@ -14,6 +14,10 @@ class Project extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'deadline' => 'datetime'
+    ];
+
     protected static function booted()
     {
         static::addGlobalScope('onlyActiveProjects', function (Builder $builder) {
