@@ -31,7 +31,7 @@ class Store extends FormRequest
             ],
             'client_id' => [
                 'required',
-                Rule::exists('clients', 'id')
+                'exists:clients,id,deleted_at,NULL'
             ],
             'project_status_id' => [
                 'required',
