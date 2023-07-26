@@ -6,7 +6,7 @@ use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\TasksController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome');
+Route::permanentRedirect('/', 'dashboard');
 
 Route::middleware([
     'auth:sanctum',
