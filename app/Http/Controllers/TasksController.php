@@ -43,7 +43,10 @@ class TasksController extends Controller
      */
     public function store(Store $request)
     {
-        return to_route('tasks.show', Task::factory()->create($request->validated()));
+        /** @var Task $task */
+        $task = Task::factory()->create($request->safe()->except('image'));
+        $task->addMediaFromRequest('image')->toMediaCollection(Task::MEDIA_GALLERY_KEY);
+        return to_route('tasks.show', $task);
     }
 
     /**
@@ -77,7 +80,8 @@ class TasksController extends Controller
      */
     public function update(Update $request, Task $task)
     {
-        $task->update($request->validated());
+        $task->update($request->safe()->except('image'));
+        $task->addMediaFromRequest('image')->toMediaCollection(Task::MEDIA_GALLERY_KEY);
         return to_route('tasks.show', $task);
     }
 

@@ -50,6 +50,23 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-span-1">
+                        <div class="filament-forms-field-wrapper">
+                            <div class="space-y-2">
+                                <div class="flex items-center justify-between space-x-2 rtl:space-x-reverse">
+                                    <div class="filament-forms-field-wrapper-label inline-flex items-center space-x-3 rtl:space-x-reverse" for="data.updated_at">
+                                        <span class="text-sm font-medium leading-4 text-gray-700 dark:text-gray-300">{{ __('Images') }}</span>
+                                    </div>
+                                </div>
+                                @foreach($project->getMedia(\App\Models\Project::MEDIA_GALLERY_KEY) as $image)
+                                    <div class="filament-forms-placeholder-component">
+                                        <img src="{{ $image->getUrl() }}" alt="{{ $project->name }}">
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

@@ -43,7 +43,10 @@ class ProjectsController extends Controller
      */
     public function store(Store $request)
     {
-        return to_route('projects.show', Project::factory()->create($request->validated()));
+        /** @var Project $project */
+        $project = Project::factory()->create($request->safe()->except('image'));
+        $project->addMediaFromRequest('image')->toMediaCollection(Project::MEDIA_GALLERY_KEY);
+        return to_route('projects.show', $project);
     }
 
     /**
@@ -77,7 +80,8 @@ class ProjectsController extends Controller
      */
     public function update(Update $request, Project $project)
     {
-        $project->update($request->validated());
+        $project->update($request->safe()->except('image'));
+        $project->addMediaFromRequest('image')->toMediaCollection(Project::MEDIA_GALLERY_KEY);
         return to_route('projects.show', $project);
     }
 

@@ -25,6 +25,7 @@ class Update extends FormRequest
         return [
             'title' => 'sometimes|required',
             'description' => 'sometimes|string',
+            'image' => 'file|max:2048|mimes:jpg,png',
             'user_id' => [
                 'sometimes',
                 Rule::exists('users', 'id')

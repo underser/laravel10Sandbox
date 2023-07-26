@@ -8,13 +8,19 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Task extends Model
+class Task extends Model implements HasMedia
 {
     use HasFactory;
     use PaginatorDefaults;
+    use InteractsWithMedia;
+
+    public const MEDIA_GALLERY_KEY = 'task-images-main';
 
     protected $guarded = ['id'];
+
 
     protected static function booted()
     {

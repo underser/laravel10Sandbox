@@ -6,7 +6,7 @@
             </h1>
         </div>
     </header>
-    <form method="POST" action="{{ route('projects.store') }}" class="filament-form space-y-6" >
+    <form method="POST" action="{{ route('projects.store') }}" class="filament-form space-y-6" enctype='multipart/form-data'>
         @csrf
         <div class="grid grid-cols-1 filament-forms-component-container gap-6">
             <div class="col-span-full">
@@ -58,6 +58,30 @@
                                                 <div class="filament-forms-text-input-component flex items-center space-x-2 rtl:space-x-reverse group">
                                                     <div class="flex-1">
                                                     <textarea id="description" name="description" class="filament-forms-input block w-full transition duration-75 rounded-lg shadow-sm outline-none focus:ring-1 focus:ring-inset disabled:opacity-70 dark:bg-gray-700 dark:text-white border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:focus:border-primary-500"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-span-1">
+                                        <div class="filament-forms-field-wrapper">
+                                            <div class="space-y-2">
+                                                <div class="flex items-center justify-between space-x-2 rtl:space-x-reverse">
+                                                    <label class="filament-forms-field-wrapper-label inline-flex items-center space-x-3 rtl:space-x-reverse" for="image">
+                                                        <span class="text-sm font-medium leading-4 text-gray-700 dark:text-gray-300">
+                                                            {{ __('Image') }}
+                                                            <span class="whitespace-nowrap">
+                                                                @error('image')
+                                                                    <sup class="font-medium text-danger-700 dark:text-danger-400">{{ $message }}</sup>
+                                                                @enderror
+                                                            </span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                                <div class="filament-forms-text-input-component flex items-center space-x-2 rtl:space-x-reverse group">
+                                                    <div class="flex-1">
+                                                        <input type="file" id="image" name="image" class="filament-forms-input block w-full transition duration-75 rounded-lg shadow-sm outline-none focus:ring-1 focus:ring-inset disabled:opacity-70 dark:bg-gray-700 dark:text-white border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:focus:border-primary-500">
                                                     </div>
                                                 </div>
                                             </div>

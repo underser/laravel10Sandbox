@@ -25,6 +25,7 @@ class Store extends FormRequest
         return [
             'title' => 'required|required',
             'description' => 'string',
+            'image' => 'file|max:2048|mimes:jpg,png',
             'user_id' => [
                 'required',
                 Rule::exists('users', 'id')
@@ -39,6 +40,5 @@ class Store extends FormRequest
             ],
             'deadline' => 'required|date'
         ];
-
     }
 }
