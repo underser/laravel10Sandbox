@@ -25,6 +25,7 @@ class Store extends FormRequest
         return [
             'title' => 'required',
             'description' => 'string',
+            'image' => 'file|max:2048|mimes:jpg,png',
             'estimation' => 'numeric',
             'user_id' => [
                 'required',
