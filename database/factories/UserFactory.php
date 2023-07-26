@@ -4,7 +4,9 @@ namespace Database\Factories;
 
 use App\Models\Team;
 use App\Models\User;
+use App\Services\CountryProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Features;
 
@@ -34,6 +36,8 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
             'current_team_id' => null,
+            'phone' => $this->faker->phoneNumber(),
+            'country_code' => (new CountryProvider())->getCountries()->random(1)[0]['code']
         ];
     }
 

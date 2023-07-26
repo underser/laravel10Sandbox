@@ -10,6 +10,8 @@ use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +20,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->seedRolesAndPermission();
         $commonStatuses = collect(['Open', 'In Progress', 'Postponed', 'Estimation', 'Done', 'Closed']);
         $userIds = User::factory(30)->create()->modelKeys();
 
@@ -52,5 +55,38 @@ class DatabaseSeeder extends Seeder
                 'task_status_id' => $taskStatuses->random(1)->first()->id,
             ]);
         }
+    }
+
+    private function seedRolesAndPermission()
+    {
+        $permissions = [
+            'manage users',
+            'manage clients',
+            'manage projects',
+            'manage tasks'
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
+
+        Role::create(['name' => 'Administrator'])->givePermissionTo(Permission::all());
+        Role::create(['name' => 'Client'])->givePermissionTo(
+            Permission::query()->where([
+                ['name', '=', 'manage projects'],
+                ['name', '=', 'manage tasks']
+            ])
+        );
+        Role::create(['name' => 'Project Manager'])->givePermissionTo(
+            Permission::query()->where([
+                ['name', '=', 'manage projects'],
+                ['name', '=', 'manage tasks']
+            ])
+        );
+        Role::create(['name' => 'User'])->givePermissionTo(
+            Permission::query()->where([
+                ['name', '=', 'manage tasks']
+            ])
+        );
     }
 }
