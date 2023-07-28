@@ -12,7 +12,7 @@ class Store extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->user()?->can('manage projects');
     }
 
     /**
@@ -32,7 +32,7 @@ class Store extends FormRequest
             ],
             'client_id' => [
                 'required',
-                'exists:clients,id,deleted_at,NULL'
+                Rule::exists('users', 'id')
             ],
             'project_status_id' => [
                 'required',

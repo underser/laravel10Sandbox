@@ -45,7 +45,11 @@ class TasksController extends Controller
     {
         /** @var Task $task */
         $task = Task::factory()->create($request->safe()->except('image'));
-        $task->addMediaFromRequest('image')->toMediaCollection(Task::MEDIA_GALLERY_KEY);
+
+        if ($request->hasFile('image')) {
+            $task->addMediaFromRequest('image')->toMediaCollection(Task::MEDIA_GALLERY_KEY);
+        }
+
         return to_route('tasks.show', $task);
     }
 
@@ -81,7 +85,11 @@ class TasksController extends Controller
     public function update(Update $request, Task $task)
     {
         $task->update($request->safe()->except('image'));
-        $task->addMediaFromRequest('image')->toMediaCollection(Task::MEDIA_GALLERY_KEY);
+
+        if ($request->hasFile('image')) {
+            $task->addMediaFromRequest('image')->toMediaCollection(Task::MEDIA_GALLERY_KEY);
+        }
+
         return to_route('tasks.show', $task);
     }
 
