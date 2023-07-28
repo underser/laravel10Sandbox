@@ -12,7 +12,7 @@ class Update extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->user()?->can('manage tasks');
     }
 
     /**

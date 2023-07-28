@@ -21,7 +21,9 @@ Route::middleware([
     Route::resource('customers', CustomersController::class)->parameters([
         'customers' => 'user'
     ]);
-    Route::resource('clients', ClientsController::class);
+    Route::resource('clients', ClientsController::class)->parameters([
+        'clients' => 'user'
+    ])->only(['index', 'show', 'destroy']);
     Route::resource('projects', ProjectsController::class);
     Route::resource('tasks', TasksController::class);
 });

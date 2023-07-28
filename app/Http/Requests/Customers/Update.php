@@ -13,7 +13,7 @@ class Update extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->user()?->can('manage users');
     }
 
     /**
@@ -25,7 +25,6 @@ class Update extends FormRequest
     {
         return [
             'name' => 'sometimes|required|max:50',
-
             'email' => [
                 'sometimes',
                 'required',

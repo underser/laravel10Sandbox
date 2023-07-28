@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Customers\Store;
 use App\Http\Requests\Customers\Update;
 use App\Models\User;
+use App\Models\UserRoles;
 use App\Services\CountryProvider;
 
 class CustomersController extends Controller
@@ -17,7 +18,7 @@ class CustomersController extends Controller
      */
     public function index()
     {
-        $users = User::query();
+        $users = User::query()->role(UserRoles::USER->value);
         $perPage = request()?->query('perPage');
 
         $users = ($perPage ? $users->paginate($perPage) : $users->paginate())->withQueryString();

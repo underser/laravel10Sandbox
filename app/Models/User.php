@@ -11,6 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -20,6 +21,7 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
     use PaginatorDefaults;
+    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -30,6 +32,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'address',
+        'country_code',
+        'vat'
     ];
 
     /**
@@ -61,6 +67,11 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function ownProjects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'client_id');
+    }
 
     public function projects(): HasMany
     {

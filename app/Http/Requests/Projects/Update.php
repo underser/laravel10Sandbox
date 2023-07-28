@@ -12,7 +12,7 @@ class Update extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->user()?->can('manage projects');
     }
 
     /**
@@ -24,21 +24,18 @@ class Update extends FormRequest
     {
         return [
             'title' => 'sometimes|required',
-            'description' => 'sometimes|string',
+            'description' => 'string',
             'image' => 'file|max:2048|mimes:jpg,png',
             'user_id' => [
-                'sometimes',
                 Rule::exists('users', 'id')
             ],
             'client_id' => [
-                'sometimes',
-                'exists:clients,id,deleted_at,NULL'
+                Rule::exists('users', 'id')
             ],
             'project_status_id' => [
-                'sometimes',
                 Rule::exists('project_statuses', 'id')
             ],
-            'deadline' => 'sometimes|date'
+            'deadline' => 'date'
         ];
     }
 }

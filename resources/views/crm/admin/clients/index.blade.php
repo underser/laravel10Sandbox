@@ -5,11 +5,6 @@
                 {{ __('Clients') }}
             </h1>
         </div>
-        <div class="filament-page-actions flex flex-wrap items-center gap-4 justify-start shrink-0">
-            <a href="{{ route('clients.create') }}" class="filament-button filament-button-size-md inline-flex items-center justify-center py-1 gap-1 font-medium rounded-lg border transition-colors outline-none focus:ring-offset-2 focus:ring-2 focus:ring-inset dark:focus:ring-offset-0 min-h-[2.25rem] px-4 text-sm text-white shadow focus:ring-white border-transparent bg-primary-600 hover:bg-primary-500 focus:bg-primary-700 focus:ring-offset-primary-700 filament-page-button-action">
-                <span class="">{{ __('New Client') }}</span>
-            </a>
-        </div>
     </header>
     <div class="filament-tables-component">
         <div class="border border-gray-300 shadow-sm bg-white rounded-xl filament-tables-container dark:bg-gray-800 dark:border-gray-700">
@@ -78,11 +73,8 @@
                             </td>
                             <td class="filament-tables-actions-cell px-4 py-3 whitespace-nowrap">
                                 <div class="filament-tables-actions-container flex items-center gap-4 justify-end">
-                                    <a href="{{ route('clients.edit', $client) }}" class="filament-link inline-flex items-center justify-center gap-0.5 font-medium outline-none hover:underline focus:underline text-sm text-primary-600 hover:text-primary-500 dark:text-primary-500 dark:hover:text-primary-400 filament-tables-link-action">
-                                        <svg class="filament-link-icon w-4 h-4 mr-1 rtl:ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
-                                        </svg>
-                                        Edit
+                                    <a href="{{ route('clients.show', $client) }}" class="filament-link inline-flex items-center justify-center gap-0.5 font-medium outline-none hover:underline focus:underline text-sm text-primary-600 hover:text-primary-500 dark:text-primary-500 dark:hover:text-primary-400 filament-tables-link-action">
+                                        {{ __('Show') }}
                                     </a>
                                 </div>
                             </td>
