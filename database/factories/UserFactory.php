@@ -37,7 +37,9 @@ class UserFactory extends Factory
             'profile_photo_path' => null,
             'current_team_id' => null,
             'phone' => $this->faker->phoneNumber(),
-            'country_code' => (new CountryProvider())->getCountries()->random(1)[0]['code']
+            'country_code' => (new CountryProvider())->getCountries()->random(1)[0]['code'],
+            'vat' => $this->faker->randomNumber(5),
+            'address' => $this->faker->address(),
         ];
     }
 

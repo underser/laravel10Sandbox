@@ -21,15 +21,6 @@ class Task extends Model implements HasMedia
 
     protected $guarded = ['id'];
 
-
-    protected static function booted()
-    {
-        static::addGlobalScope('onlyActiveTasks', function (Builder $builder) {
-            $builder->has('project.client');
-        });
-        parent::booted();
-    }
-
     public function scopeWithAll(Builder $query): void
     {
         $query->with(['project', 'status', 'user']);

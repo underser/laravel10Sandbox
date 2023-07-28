@@ -3,12 +3,12 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Client;
 use App\Models\Project;
 use App\Models\ProjectStatus;
 use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
+use App\Models\UserRoles;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -22,13 +22,13 @@ class DatabaseSeeder extends Seeder
     {
         $this->seedRolesAndPermission();
         $commonStatuses = collect(['Open', 'In Progress', 'Postponed', 'Estimation', 'Done', 'Closed']);
-        $userIds = User::factory(30)->create()->modelKeys();
+        $users = User::factory(30)->create();
+        $userIds = $users->modelKeys();
+
+        $users->each(fn ($user) => $user->assignRole(UserRoles::USER->value));
 
         $commonStatuses->each(function ($status) {
             ProjectStatus::factory()->create([
-                'status' => $status
-            ]);
-            TaskStatus::factory()->create([
                 'status' => $status
             ]);
         });
@@ -42,7 +42,9 @@ class DatabaseSeeder extends Seeder
         $projectStatuses = ProjectStatus::all();
         $taskStatuses = TaskStatus::all();
 
-        foreach (Client::factory(200)->create() as $client) {
+        /** @var User $client */
+        foreach (User::factory(200)->create() as $client) {
+            $client->assignRole(UserRoles::CLIENT->value);
             $project = Project::factory()->create([
                 'user_id' => $userIds[array_rand($userIds)],
                 'client_id' => $client->id,
@@ -70,20 +72,20 @@ class DatabaseSeeder extends Seeder
             Permission::create(['name' => $permission]);
         }
 
-        Role::create(['name' => 'Administrator'])->givePermissionTo(Permission::all());
-        Role::create(['name' => 'Client'])->givePermissionTo(
+        Role::create(['name' => UserRoles::ADMINISTRATOR->value])->givePermissionTo(Permission::all());
+        Role::create(['name' => UserRoles::CLIENT->value])->givePermissionTo(
             Permission::query()->where([
                 ['name', '=', 'manage projects'],
                 ['name', '=', 'manage tasks']
             ])
         );
-        Role::create(['name' => 'Project Manager'])->givePermissionTo(
+        Role::create(['name' => UserRoles::PROJECT_MANAGER->value])->givePermissionTo(
             Permission::query()->where([
                 ['name', '=', 'manage projects'],
                 ['name', '=', 'manage tasks']
             ])
         );
-        Role::create(['name' => 'User'])->givePermissionTo(
+        Role::create(['name' => UserRoles::USER->value])->givePermissionTo(
             Permission::query()->where([
                 ['name', '=', 'manage tasks']
             ])

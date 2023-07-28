@@ -23,14 +23,6 @@ class Project extends Model implements HasMedia
         'deadline' => 'datetime'
     ];
 
-    protected static function booted()
-    {
-        static::addGlobalScope('onlyActiveProjects', function (Builder $builder) {
-            $builder->has('client');
-        });
-        parent::booted();
-    }
-
     public function scopeWithAll(Builder $query): void
     {
         $query->with(['user', 'client', 'tasks', 'status']);
@@ -38,7 +30,7 @@ class Project extends Model implements HasMedia
 
     public function client(): BelongsTo
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(User::class);
     }
 
     public function tasks(): HasMany

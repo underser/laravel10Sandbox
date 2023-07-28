@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Clients\Store;
 use App\Http\Requests\Clients\Update;
-use App\Models\Client;
+use App\Models\User;
+use App\Models\UserRoles;
 
 class ClientsController extends Controller
 {
@@ -13,7 +14,7 @@ class ClientsController extends Controller
      */
     public function index()
     {
-        $clients = Client::query();
+        $clients = User::query()->role(UserRoles::CLIENT->value);
         $perPage = request()?->query('perPage');
 
         $clients = ($perPage ? $clients->paginate($perPage) : $clients->paginate())->withQueryString();
@@ -24,56 +25,21 @@ class ClientsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('crm.admin.clients.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Store $request)
-    {
-        return to_route('clients.show', Client::factory()->create($request->validated()));
-    }
-
-    /**
      * Display the specified resource.
      */
-    public function show(Client $client)
+    public function show(User $user)
     {
         return view('crm.admin.clients.show', [
-            'client' => $client,
+            'client' => $user,
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Client $client)
-    {
-        return view('crm.admin.clients.edit', [
-            'client' => $client,
-        ]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Update $request, Client $client)
-    {
-        $client->update($request->validated());
-        return to_route('clients.show', $client);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Client $client)
+    public function destroy(User $user)
     {
-        $client->delete();
+        $user->delete();
         return to_route('clients.index');
     }
 }

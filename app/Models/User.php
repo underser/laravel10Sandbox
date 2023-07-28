@@ -64,6 +64,11 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+    public function ownProjects(): HasMany
+    {
+        return $this->hasMany(Project::class, 'client_id');
+    }
+
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class);
