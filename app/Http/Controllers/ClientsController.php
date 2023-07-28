@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Clients\Store;
-use App\Http\Requests\Clients\Update;
 use App\Models\User;
 use App\Models\UserRoles;
 
