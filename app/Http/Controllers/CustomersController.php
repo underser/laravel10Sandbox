@@ -33,6 +33,7 @@ class CustomersController extends Controller
      */
     public function create()
     {
+        $this->checkUserAbility('manage users');
         return view('crm.admin.customers.create', [
             'countries' => $this->countryProvider->getCountries()
         ]);
@@ -43,6 +44,8 @@ class CustomersController extends Controller
      */
     public function store(Store $request)
     {
+        $this->checkUserAbility('manage users');
+
         return to_route('customers.show', User::factory()->create($request->validated()));
     }
 
@@ -62,6 +65,8 @@ class CustomersController extends Controller
      */
     public function edit(User $user)
     {
+        $this->checkUserAbility('manage users');
+
         return view('crm.admin.customers.edit', [
             'customer' => $user,
             'countries' => $this->countryProvider->getCountries()
@@ -73,6 +78,8 @@ class CustomersController extends Controller
      */
     public function update(Update $request, User $user)
     {
+        $this->checkUserAbility('manage users');
+
         $user->update($request->validated());
         return to_route('customers.show', $user);
     }
@@ -82,6 +89,8 @@ class CustomersController extends Controller
      */
     public function destroy(User $user)
     {
+        $this->checkUserAbility('manage users');
+
         $user->delete();
         return to_route('customers.index');
     }

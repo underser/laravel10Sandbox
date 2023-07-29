@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Models\ProjectStatus;
 use App\Models\User;
 use App\Models\UserRoles;
+use Illuminate\Http\Response;
 
 class ProjectsController extends Controller
 {
@@ -31,6 +32,8 @@ class ProjectsController extends Controller
      */
     public function create()
     {
+        $this->checkUserAbility('manage projects');
+
         return view('crm.admin.projects.create', [
             'clients' => User::role(UserRoles::CLIENT->value)->get(),
             'users' => User::role(UserRoles::USER->value)->get(),
@@ -43,12 +46,15 @@ class ProjectsController extends Controller
      */
     public function store(Store $request)
     {
+        $this->checkUserAbility('manage projects');
+
         /** @var Project $project */
         $project = Project::factory()->create($request->safe()->except('image'));
 
         if ($request->hasFile('image')) {
             $project->addMediaFromRequest('image')->toMediaCollection(Project::MEDIA_GALLERY_KEY);
         }
+
         return to_route('projects.show', $project);
     }
 
@@ -70,6 +76,8 @@ class ProjectsController extends Controller
      */
     public function edit(Project $project)
     {
+        $this->checkUserAbility('manage projects');
+
         return view('crm.admin.projects.edit', [
             'project' => $project->loadMissing(['user', 'client', 'status']),
             'clients' => User::role(UserRoles::CLIENT->value)->get(),
@@ -83,6 +91,8 @@ class ProjectsController extends Controller
      */
     public function update(Update $request, Project $project)
     {
+        $this->checkUserAbility('manage projects');
+
         $project->update($request->safe()->except('image'));
 
         if ($request->hasFile('image')) {
@@ -97,6 +107,8 @@ class ProjectsController extends Controller
      */
     public function destroy(Project $project)
     {
+        $this->checkUserAbility('manage projects');
+
         $project->delete();
         return to_route('projects.index');
     }

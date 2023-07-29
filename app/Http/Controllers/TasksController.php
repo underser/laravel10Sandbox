@@ -31,6 +31,8 @@ class TasksController extends Controller
      */
     public function create()
     {
+        $this->checkUserAbility('manage tasks');
+
         return view('crm.admin.tasks.create', [
             'projects' => Project::all(),
             'users' => User::all(),
@@ -43,6 +45,8 @@ class TasksController extends Controller
      */
     public function store(Store $request)
     {
+        $this->checkUserAbility('manage tasks');
+
         /** @var Task $task */
         $task = Task::factory()->create($request->safe()->except('image'));
 
@@ -71,6 +75,8 @@ class TasksController extends Controller
      */
     public function edit(Task $task)
     {
+        $this->checkUserAbility('manage tasks');
+
         return view('crm.admin.tasks.edit', [
             'task' => $task->loadMissing(['user', 'status', 'project']),
             'projects' => Project::all(),
@@ -84,6 +90,8 @@ class TasksController extends Controller
      */
     public function update(Update $request, Task $task)
     {
+        $this->checkUserAbility('manage tasks');
+
         $task->update($request->safe()->except('image'));
 
         if ($request->hasFile('image')) {
@@ -98,6 +106,8 @@ class TasksController extends Controller
      */
     public function destroy(Task $task)
     {
+        $this->checkUserAbility('manage tasks');
+
         $task->delete();
         return to_route('tasks.index');
     }

@@ -37,6 +37,8 @@ class ClientsController extends Controller
      */
     public function destroy(User $user)
     {
+        $this->checkUserAbility('manage clients');
+
         $user->delete();
         return to_route('clients.index');
     }

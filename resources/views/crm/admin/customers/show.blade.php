@@ -5,6 +5,7 @@
                 {{ __('Edit customer :name', ['name' => $customer->name]) }}
             </h1>
         </div>
+        @can('manage users')
         <div class="filament-page-actions flex flex-wrap items-center gap-4 justify-start shrink-0">
             <form action="{{ route('customers.destroy', $customer) }}" method="POST">
                 @csrf
@@ -14,6 +15,7 @@
                 </button>
             </form>
         </div>
+        @endcan
     </header>
     <div class="grid grid-cols-1 lg:grid-cols-3 filament-forms-component-container gap-6">
         <div class="col-span-full lg:col-span-2">
