@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\PaginatorDefaults;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,7 @@ class Project extends Model implements HasMedia
 {
     use HasFactory;
     use InteractsWithMedia;
+    use PaginatorDefaults;
 
     public const MEDIA_GALLERY_KEY = 'project-images-main';
 

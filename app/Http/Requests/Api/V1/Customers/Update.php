@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Customers;
+namespace App\Http\Requests\Api\V1\Customers;
 
 use App\Services\CountryProvider;
 use Illuminate\Foundation\Http\FormRequest;

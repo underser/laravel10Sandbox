@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Customers;
+namespace App\Http\Requests\Api\V1\Customers;
 
 use App\Services\CountryProvider;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class Update extends FormRequest
+class Store extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,12 +24,8 @@ class Update extends FormRequest
     public function rules(CountryProvider $countryProvider): array
     {
         return [
-            'name' => 'sometimes|required|max:50',
-            'email' => [
-                'sometimes',
-                'required',
-                Rule::unique('users', 'email')->ignoreModel(request()->user)
-            ],
+            'name' => 'required|max:50',
+            'email' => 'required|unique:users,email|email',
             'phone' => 'numeric',
             'country_code' => Rule::in($countryProvider->getCountries()->pluck('code'))
         ];

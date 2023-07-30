@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Tasks;
+namespace App\Http\Requests\Api\V1\Tasks;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class Store extends FormRequest
+class Update extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,20 +23,20 @@ class Store extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required',
-            'description' => 'string',
+            'title' => 'sometimes|required',
+            'description' => 'sometimes|string',
             'image' => 'file|max:2048|mimes:jpg,png',
-            'estimation' => 'numeric',
+            'estimation' => 'sometimes|numeric',
             'user_id' => [
-                'required',
+                'sometimes',
                 Rule::exists('users', 'id')
             ],
             'project_id' => [
-                'required',
+                'sometimes',
                 Rule::exists('projects', 'id')
             ],
             'task_status_id' => [
-                'required',
+                'sometimes',
                 Rule::exists('task_statuses', 'id')
             ]
         ];
