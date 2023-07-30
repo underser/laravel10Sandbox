@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Requests\Tasks;
+namespace App\Http\Requests\Api\V1\Projects;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class Store extends FormRequest
+class Update extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return auth()->user()?->can('manage tasks');
+        return auth()->user()?->can('manage projects');
     }
 
     /**
@@ -23,22 +23,20 @@ class Store extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required',
+            'title' => 'sometimes|required',
             'description' => 'string',
             'image' => 'file|max:2048|mimes:jpg,png',
-            'estimation' => 'numeric',
             'user_id' => [
-                'required',
                 Rule::exists('users', 'id')
             ],
-            'project_id' => [
-                'required',
-                Rule::exists('projects', 'id')
+            'client_id' => [
+                Rule::exists('users', 'id')
             ],
-            'task_status_id' => [
-                'required',
-                Rule::exists('task_statuses', 'id')
-            ]
+            'project_status_id' => [
+                Rule::exists('project_statuses', 'id')
+            ],
+            'deadline' => 'date'
         ];
+
     }
 }
