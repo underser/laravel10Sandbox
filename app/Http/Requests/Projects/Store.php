@@ -34,10 +34,6 @@ class Store extends FormRequest
                 'required',
                 Rule::exists('users', 'id')
             ],
-            'project_status_id' => [
-                'required',
-                Rule::exists('project_statuses', 'id')
-            ],
             'deadline' => 'required|date'
         ];
     }

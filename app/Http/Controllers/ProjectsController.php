@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\StateException;
 use App\Http\Requests\Projects\Store;
 use App\Http\Requests\Projects\Update;
 use App\Models\Project;
 use App\Models\ProjectStatus;
 use App\Models\User;
 use App\Models\UserRoles;
-use Illuminate\Http\Response;
+use App\Notifications\ProjectCreated;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ProjectsController extends Controller
 {
@@ -37,7 +41,6 @@ class ProjectsController extends Controller
         return view('crm.admin.projects.create', [
             'clients' => User::role(UserRoles::CLIENT->value)->get(),
             'users' => User::role(UserRoles::USER->value)->get(),
-            'statuses' => ProjectStatus::all()
         ]);
     }
 
@@ -92,6 +95,21 @@ class ProjectsController extends Controller
     public function update(Update $request, Project $project)
     {
         $this->checkUserAbility('manage projects');
+
+        try {
+            $requestedProjectStatusName = Str::camel(
+                ProjectStatus::find($request->get('project_status_id'))->status
+            );
+            $project->state()->{$requestedProjectStatusName}();
+        } catch (StateException $e) {
+            $validator = Validator::make([], []);
+            $validator->getMessageBag()
+                ->add(
+                    'project_status_id',
+                    __('Project cannot be moved to :Status', ['status' => $requestedProjectStatusName])
+                );
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         $project->update($request->safe()->except('image'));
 

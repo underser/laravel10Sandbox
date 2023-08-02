@@ -172,7 +172,7 @@
                                                 <span class="text-sm font-medium leading-4 text-gray-700 dark:text-gray-300">
                                                     {{ __('Status') }}
                                                     <span class="whitespace-nowrap">
-                                                        @error('status')
+                                                        @error('project_status_id')
                                                             <sup class="font-medium text-danger-700 dark:text-danger-400">{{ $message }}</sup>
                                                         @enderror
                                                     </span>

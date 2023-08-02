@@ -169,34 +169,6 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-span-1">
-                                        <div class="filament-forms-field-wrapper">
-                                            <div class="space-y-2">
-                                                <div class="flex items-center justify-between space-x-2 rtl:space-x-reverse">
-                                                    <label class="filament-forms-field-wrapper-label inline-flex items-center space-x-3 rtl:space-x-reverse" for="status">
-                                                <span class="text-sm font-medium leading-4 text-gray-700 dark:text-gray-300">
-                                                    {{ __('Status') }}
-                                                    <span class="whitespace-nowrap">
-                                                        @error('status')
-                                                            <sup class="font-medium text-danger-700 dark:text-danger-400">{{ $message }}</sup>
-                                                        @enderror
-                                                    </span>
-                                                </span>
-                                                    </label>
-                                                </div>
-                                                <div class="filament-forms-text-input-component flex items-center space-x-2 rtl:space-x-reverse group">
-                                                    <div class="flex-1">
-                                                        <select name="project_status_id" id="status" class="filament-forms-input block w-full transition duration-75 rounded-lg shadow-sm outline-none focus:ring-1 focus:ring-inset disabled:opacity-70 dark:bg-gray-700 dark:text-white border-gray-300 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:focus:border-primary-500">
-                                                            @foreach($statuses as $status)
-                                                                <option value="{{ $status->id }}">{{ $status->status }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
                                 </div>
                             </div>
                         </div>
