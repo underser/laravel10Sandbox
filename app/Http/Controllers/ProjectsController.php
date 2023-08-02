@@ -58,6 +58,8 @@ class ProjectsController extends Controller
             $project->addMediaFromRequest('image')->toMediaCollection(Project::MEDIA_GALLERY_KEY);
         }
 
+        Notification::send(User::find($request->get('user_id')), new ProjectCreated($project));
+
         return to_route('projects.show', $project);
     }
 
