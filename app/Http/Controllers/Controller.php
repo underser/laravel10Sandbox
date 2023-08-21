@@ -11,7 +11,6 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-
     protected function checkUserAbility(?string $ability = null): void
     {
         if ($ability && auth()->user()?->cannot($ability)) {

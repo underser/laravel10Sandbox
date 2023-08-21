@@ -11,8 +11,8 @@ use App\Models\User;
 use App\Models\UserRoles;
 use App\Notifications\ProjectCreated;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class ProjectsController extends Controller
 {
@@ -93,6 +93,7 @@ class ProjectsController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @throws ValidationException
      */
     public function update(Update $request, Project $project)
     {
@@ -104,13 +105,9 @@ class ProjectsController extends Controller
             );
             $project->state()->{$requestedProjectStatusName}();
         } catch (StateException $e) {
-            $validator = Validator::make([], []);
-            $validator->getMessageBag()
-                ->add(
-                    'project_status_id',
-                    __('Project cannot be moved to :Status', ['status' => $requestedProjectStatusName])
-                );
-            return redirect()->back()->withErrors($validator)->withInput();
+            throw ValidationException::withMessages([
+                'project_status_id' => __('Project cannot be moved to :Status', ['status' => $requestedProjectStatusName])
+            ]);
         }
 
         $project->update($request->safe()->except('image'));
