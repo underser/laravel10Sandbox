@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'v1'], function () {
+Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'v1', 'as' => 'api.'], function () {
     Route::apiResource('customers', CustomersController::class)->parameters([
         'customers' => 'user'
     ])->only(['index', 'show', 'destroy']);
