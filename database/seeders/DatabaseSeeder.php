@@ -10,6 +10,8 @@ use App\Models\TaskStatus;
 use App\Models\User;
 use App\Models\UserRoles;
 use Illuminate\Database\Seeder;
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\App;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -22,10 +24,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->seedRolesAndPermission();
         $commonStatuses = collect(['Open', 'In Progress', 'Postponed', 'Estimation', 'Done', 'Closed']);
-        $users = User::factory(30)->create();
-        $userIds = $users->modelKeys();
-
-        $users->each(fn ($user) => $user->assignRole(UserRoles::USER->value));
 
         $commonStatuses->each(function ($status) {
             ProjectStatus::factory()->create([
@@ -39,23 +37,27 @@ class DatabaseSeeder extends Seeder
             ]);
         });
 
-        $projectStatuses = ProjectStatus::all();
-        $taskStatuses = TaskStatus::all();
+        if (App::environment('local')) {
+            $projectStatuses = ProjectStatus::all();
+            $taskStatuses = TaskStatus::all();
+            $users = User::factory(30)->create()->each(fn($user) => $user->assignRole(UserRoles::USER->value));
+            $userIds = $users->modelKeys();
 
-        /** @var User $client */
-        foreach (User::factory(200)->create() as $client) {
-            $client->assignRole(UserRoles::CLIENT->value);
-            $project = Project::factory()->create([
-                'user_id' => $userIds[array_rand($userIds)],
-                'client_id' => $client->id,
-                'project_status_id' => $projectStatuses->random(1)->first()->id
-            ]);
+            /** @var User $client */
+            foreach (User::factory(200)->create() as $client) {
+                $client->assignRole(UserRoles::CLIENT->value);
+                $project = Project::factory()->create([
+                    'user_id' => $userIds[array_rand($userIds)],
+                    'client_id' => $client->id,
+                    'project_status_id' => $projectStatuses->random(1)->first()->id
+                ]);
 
-            Task::factory(random_int(10, 40))->create([
-                'user_id' => $userIds[array_rand($userIds)],
-                'project_id' => $project->id,
-                'task_status_id' => $taskStatuses->random(1)->first()->id,
-            ]);
+                Task::factory(random_int(10, 40))->create([
+                    'user_id' => $userIds[array_rand($userIds)],
+                    'project_id' => $project->id,
+                    'task_status_id' => $taskStatuses->random(1)->first()->id,
+                ]);
+            }
         }
     }
 
