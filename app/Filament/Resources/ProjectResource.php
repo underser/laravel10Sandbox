@@ -17,7 +17,7 @@ class ProjectResource extends Resource
 {
     protected static ?string $model = Project::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
 
     public static function form(Form $form): Form
     {
@@ -31,7 +31,23 @@ class ProjectResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('title')
+                    ->label(__('Title'))
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('deadline')
+                    ->label(__('Deadline Date'))
+                    ->dateTime('m/d/Y')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label(__('Moderator'))
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('client.name')
+                    ->label('Client')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('status.status')
+                    ->label(__('Status'))
+                    ->sortable(),
             ])
             ->filters([
                 //
@@ -48,14 +64,14 @@ class ProjectResource extends Resource
                 Tables\Actions\CreateAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -63,5 +79,5 @@ class ProjectResource extends Resource
             'create' => Pages\CreateProject::route('/create'),
             'edit' => Pages\EditProject::route('/{record}/edit'),
         ];
-    }    
+    }
 }
