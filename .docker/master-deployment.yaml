@@ -10,7 +10,39 @@ spec:
       port: 80
       targetPort: 80 # in the container
   type: LoadBalancer
+
 ---
+# Declare a common volume for all pods
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: host-pv
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /data
+    type: DirectoryOrCreate
+---
+# Claim volume
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: host-pvc
+spec:
+  volumeName: host-pv
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25,9 +57,16 @@ spec:
       labels:
         app: second-app
     spec:
+      volumes:
+        - name: db-volume
+          persistentVolumeClaim:
+            claimName: host-pvc
       containers:
         - name: mariadb
           image: mariadb:10.4
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: db-volume
           env:
             - name: MYSQL_ROOT_PASSWORD
               value: 'root'
@@ -36,13 +75,14 @@ spec:
             - name: MYSQL_USER
               value: 'laravel'
             - name: MYSQL_PASSWORD
-              value: 'laravel'
+              value: 'Qzkm68aljhjkh'
         - name: nginx
           image: underser/laravel-crm-nginx
         - name: php-fpm
           image: underser/laravel-crm:latest
+          #imagePullPolicy: Always
           command: ['/bin/sh', '-c']
-          args: ['php artisan migrate && php-fpm']
+          args: ['php artisan migrate --force && php-fpm']
           livenessProbe:
             httpGet:
               path: /
@@ -51,7 +91,7 @@ spec:
             initialDelaySeconds: 15
           env:
             - name: APP_ENV
-              value: 'local'
+              value: 'staging'
             - name: APP_DEBUG
               value: 'true'
             - name: DB_CONNECTION
@@ -65,6 +105,6 @@ spec:
             - name: DB_USERNAME
               value: 'laravel'
             - name: DB_PASSWORD
-              value: 'laravel'
+              value: 'Qzkm68aljhjkh'
             - name: APP_KEY
               value: 'base64:3m5Je886yBDvo0g9+q2wM/Z4rtrWcCnSxTi/slBMZEI='

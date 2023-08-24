@@ -46,6 +46,7 @@ class CustomersController extends Controller
     {
         $this->checkUserAbility('manage users');
 
+        /** @TODO assign role */
         return to_route('customers.show', User::factory()->create($request->validated()));
     }
 
