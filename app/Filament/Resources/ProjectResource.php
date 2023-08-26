@@ -2,16 +2,20 @@
 
 namespace App\Filament\Resources;
 
+use App\Exceptions\StateException;
 use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\ProjectResource\RelationManagers;
 use App\Models\Project;
+use App\Models\ProjectStatus;
+use App\Models\User;
+use App\Models\UserRoles;
+use Closure;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 
 class ProjectResource extends Resource
 {
@@ -21,9 +25,43 @@ class ProjectResource extends Resource
 
     public static function form(Form $form): Form
     {
+        match ($form->getOperation()) {
+            'create' => $formTitle = __('Create new project'),
+            'edit' => $formTitle = __('Update project')
+        };
         return $form
             ->schema([
-                //
+                Forms\Components\Section::make($formTitle)
+                ->schema([
+                    Forms\Components\TextInput::make('title'),
+                    Forms\Components\Textarea::make('description'),
+                    Forms\Components\SpatieMediaLibraryFileUpload::make('image')
+                        ->image()
+                        ->maxSize(1021)
+                        ->collection(Project::MEDIA_GALLERY_KEY),
+                    Forms\Components\DatePicker::make('deadline'),
+                    Forms\Components\Select::make('user_id')
+                        ->label(__('Moderator'))
+                        ->options(User::role(UserRoles::USER->value)->pluck('name', 'id')),
+                    Forms\Components\Select::make('client_id')
+                        ->label(__('Client'))
+                        ->options(User::role(UserRoles::CLIENT->value)->pluck('name', 'id')),
+                    Forms\Components\Select::make('project_status_id')
+                        ->label(__('Status'))
+                        ->options(ProjectStatus::all()->pluck('status', 'id'))
+                        ->rules([
+                            fn() => static function (string $attribute, $value, Closure $fail) use ($form) {
+                                try {
+                                    $requestedProjectStatusName = Str::camel(
+                                        ProjectStatus::find($value)->status
+                                    );
+                                    $form->getRecord()?->state()->{$requestedProjectStatusName}();
+                                } catch (StateException $e) {
+                                    $fail(__('Project cannot be moved to :Status', ['status' => $requestedProjectStatusName]));
+                                }
+                            }
+                        ])
+                ])
             ]);
     }
 
@@ -53,15 +91,15 @@ class ProjectResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
                 ]),
             ])
             ->emptyStateActions([
-                Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make()
             ]);
     }
 
