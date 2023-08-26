@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "89ff037213688f01c14b490a1b2886ab",
+    "content-hash": "ad3cea5d8a4e228051bde7654ef74a62",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1471,6 +1471,43 @@
                 "source": "https://github.com/filamentphp/filament"
             },
             "time": "2023-08-23T12:39:30+00:00"
+        },
+        {
+            "name": "filament/spatie-laravel-media-library-plugin",
+            "version": "v3.0.31",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/filamentphp/spatie-laravel-media-library-plugin.git",
+                "reference": "5e67253a4aad0195fef44be803ede1096981056c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/filamentphp/spatie-laravel-media-library-plugin/zipball/5e67253a4aad0195fef44be803ede1096981056c",
+                "reference": "5e67253a4aad0195fef44be803ede1096981056c",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^10.0",
+                "php": "^8.1",
+                "spatie/laravel-medialibrary": "^10.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Filament\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Filament support for `spatie/laravel-medialibrary`.",
+            "homepage": "https://github.com/filamentphp/filament",
+            "support": {
+                "issues": "https://github.com/filamentphp/filament/issues",
+                "source": "https://github.com/filamentphp/filament"
+            },
+            "time": "2023-08-21T09:36:34+00:00"
         },
         {
             "name": "filament/support",
@@ -3656,16 +3693,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v3.0.0-beta.11",
+            "version": "v3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "8c3eb912562248d89ca7f5de59de2b2ecdb25f2e"
+                "reference": "2e426e8d47e03c4777334ec0c8397341bcfa15f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/8c3eb912562248d89ca7f5de59de2b2ecdb25f2e",
-                "reference": "8c3eb912562248d89ca7f5de59de2b2ecdb25f2e",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/2e426e8d47e03c4777334ec0c8397341bcfa15f3",
+                "reference": "2e426e8d47e03c4777334ec0c8397341bcfa15f3",
                 "shasum": ""
             },
             "require": {
@@ -3717,7 +3754,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v3.0.0-beta.11"
+                "source": "https://github.com/livewire/livewire/tree/v3.0.1"
             },
             "funding": [
                 {
@@ -3725,7 +3762,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-08-22T13:33:10+00:00"
+            "time": "2023-08-25T18:13:03+00:00"
         },
         {
             "name": "maennchen/zipstream-php",
@@ -10990,9 +11027,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "livewire/livewire": 10
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
