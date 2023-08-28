@@ -31,8 +31,7 @@ class ProjectResource extends Resource
         };
         return $form
             ->schema([
-                Forms\Components\Section::make($formTitle)
-                ->schema([
+                Forms\Components\Section::make($formTitle)->schema([
                     Forms\Components\TextInput::make('title'),
                     Forms\Components\Textarea::make('description'),
                     Forms\Components\SpatieMediaLibraryFileUpload::make('image')
