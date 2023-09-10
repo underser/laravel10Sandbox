@@ -38,14 +38,20 @@ class CustomerResource extends Resource
             ->schema([
                 Forms\Components\Section::make($formTitle)->schema([
                     Forms\Components\TextInput::make('name')
-                        ->label(__('Email')),
+                        ->label(__('Name'))
+                        ->maxLength(50)
+                        ->required(),
                     Forms\Components\TextInput::make('email')
-                        ->label(__('Email')),
+                        ->label(__('Email'))
+                        ->email()
+                        ->required(),
                     Forms\Components\TextInput::make('phone')
+                        ->tel()
                         ->label(__('Phone')),
                     Forms\Components\Select::make('country_code')
                         ->label(__('Country'))
                         ->options($countryProvider->getCountries()->pluck('name', 'code'))
+                        ->in($countryProvider->getCountries()->pluck('code'))
                 ])
             ]);
     }

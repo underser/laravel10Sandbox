@@ -20,7 +20,6 @@ use Illuminate\Support\Str;
 class ProjectResource extends Resource
 {
     protected static ?string $model = Project::class;
-
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
     public static function form(Form $form): Form
@@ -32,29 +31,40 @@ class ProjectResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Section::make($formTitle)->schema([
-                    Forms\Components\TextInput::make('title'),
+                    Forms\Components\TextInput::make('title')
+                        ->maxLength(50)
+                        ->required(),
                     Forms\Components\Textarea::make('description'),
                     Forms\Components\SpatieMediaLibraryFileUpload::make('image')
                         ->image()
                         ->maxSize(1021)
                         ->collection(Project::MEDIA_GALLERY_KEY),
-                    Forms\Components\DatePicker::make('deadline'),
+                    Forms\Components\DatePicker::make('deadline')
+                        ->after('tomorrow'),
                     Forms\Components\Select::make('user_id')
                         ->label(__('Moderator'))
-                        ->options(User::role(UserRoles::USER->value)->pluck('name', 'id')),
+                        ->options(User::role(UserRoles::USER->value)->pluck('name', 'id'))
+                        ->exists(table: User::class, column: 'id'),
                     Forms\Components\Select::make('client_id')
                         ->label(__('Client'))
-                        ->options(User::role(UserRoles::CLIENT->value)->pluck('name', 'id')),
+                        ->options(User::role(UserRoles::CLIENT->value)->pluck('name', 'id'))
+                        ->exists(table: User::class, column: 'id'),
                     Forms\Components\Select::make('project_status_id')
                         ->label(__('Status'))
                         ->options(ProjectStatus::all()->pluck('status', 'id'))
+                        ->exists(table: ProjectStatus::class, column: 'id')
                         ->rules([
                             fn() => static function (string $attribute, $value, Closure $fail) use ($form) {
                                 try {
-                                    $requestedProjectStatusName = Str::camel(
-                                        ProjectStatus::find($value)->status
-                                    );
-                                    $form->getRecord()?->state()->{$requestedProjectStatusName}();
+                                    /** @var Project $project */
+                                    $project = $form->getRecord();
+                                    $requestedProjectStatusName = ProjectStatus::find($value)->status;
+
+                                    if ($project->status->status === $requestedProjectStatusName) {
+                                        return;
+                                    }
+
+                                    $project?->state()->{Str::camel($requestedProjectStatusName)}();
                                 } catch (StateException $e) {
                                     $fail(__('Project cannot be moved to :Status', ['status' => $requestedProjectStatusName]));
                                 }
