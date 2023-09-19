@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Models\Task;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -27,6 +26,7 @@ class ExportTasks implements ShouldQueue
      */
     public function handle(): void
     {
+        $this->records->loadMissing(['user', 'project', 'status']);
         Storage::disk('exports'); // Makes sure that disk directory created.
         $filename = 'tasks_export_' . now()->timestamp . '.csv';
         $stream = fopen(storage_path('exports/' . $filename), 'wb');
