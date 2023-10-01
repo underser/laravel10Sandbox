@@ -103,7 +103,7 @@ class TaskResource extends Resource
                         ->requiresConfirmation()
                         ->modalIcon('heroicon-o-wrench-screwdriver')
                         ->action(function (array $ids) {
-                            ExportTasks::dispatchSync($ids);
+                            ExportTasks::dispatch($ids);
                             Notification::make()
                                 ->title(__('Requested entities were pushed to the queue.'))
                                 ->success()
