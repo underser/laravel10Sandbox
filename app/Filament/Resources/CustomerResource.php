@@ -7,6 +7,7 @@ use App\Filament\Resources\CustomerResource\RelationManagers;
 use App\Models\User;
 use App\Models\UserRoles;
 use App\Services\CountryProvider;
+use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -103,12 +104,13 @@ class CustomerResource extends Resource
 
 
         // @TODO seams like a filament issue self::authorize always return true
-        if (self::authorize('manage users')) {
+        // Filament::auth()->user() - always return null
+        //if (Filament::auth()->user()) {
             $pages = array_merge($pages, [
                 'create' => Pages\CreateCustomer::route('/create'),
                 'edit' => Pages\EditCustomer::route('/{record}/edit')
             ]);
-        }
+        //}
 
         return $pages;
     }

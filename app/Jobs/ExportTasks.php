@@ -18,7 +18,7 @@ class ExportTasks implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(protected Collection $records)
+    public function __construct(protected Collection|array $records)
     {}
 
     /**
@@ -26,6 +26,10 @@ class ExportTasks implements ShouldQueue
      */
     public function handle(): void
     {
+        if (is_array($this->records)) {
+            $this->records = Task::query()->whereKey($this->records)->get();
+        }
+
         $this->records->loadMissing(['user', 'project', 'status']);
         Storage::disk('exports'); // Makes sure that disk directory created.
         $filename = 'tasks_export_' . now()->timestamp . '.csv';

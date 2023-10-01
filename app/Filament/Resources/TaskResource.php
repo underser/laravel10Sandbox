@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Actions\CsvExportBulkAction;
 use App\Filament\Resources\TaskResource\Pages;
 use App\Filament\Resources\TaskResource\RelationManagers;
 use App\Filament\Tables\Actions\ExportCsvBulkAction;
@@ -16,14 +17,14 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 class TaskResource extends Resource
 {
     protected static ?string $model = Task::class;
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+
 
     public static function form(Form $form): Form
     {
@@ -93,7 +94,7 @@ class TaskResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                    BulkAction::make('csvExport')
+                    CsvExportBulkAction::make('csvExport')
                         ->label(__('Export to CSV'))
                         ->modalHeading(fn (): string => __('Export entities to CSV', ['label' => static::getPluralModelLabel()]))
                         ->modalSubmitActionLabel(__('Start'))
@@ -101,8 +102,8 @@ class TaskResource extends Resource
                         ->icon('heroicon-m-wrench-screwdriver')
                         ->requiresConfirmation()
                         ->modalIcon('heroicon-o-wrench-screwdriver')
-                        ->action(function (Collection $records) {
-                            ExportTasks::dispatch($records);
+                        ->action(function (array $ids) {
+                            ExportTasks::dispatchSync($ids);
                             Notification::make()
                                 ->title(__('Requested entities were pushed to the queue.'))
                                 ->success()
