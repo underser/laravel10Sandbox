@@ -9,3 +9,7 @@ services:
             - MYSQL_DATABASE=laravel_10_sandbox
             - MYSQL_USER=laravel
             - MYSQL_PASSWORD=laravel
+    redis:
+        image: redis
+        ports:
+            - 6379

@@ -2,8 +2,11 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Actions\CsvExportBulkAction;
 use App\Filament\Resources\TaskResource\Pages;
 use App\Filament\Resources\TaskResource\RelationManagers;
+use App\Filament\Tables\Actions\ExportCsvBulkAction;
+use App\Jobs\ExportTasks;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskStatus;
@@ -11,14 +14,17 @@ use App\Models\User;
 use Closure;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Collection;
 
 class TaskResource extends Resource
 {
     protected static ?string $model = Task::class;
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
+
 
     public static function form(Form $form): Form
     {
@@ -88,6 +94,22 @@ class TaskResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    CsvExportBulkAction::make('csvExport')
+                        ->label(__('Export to CSV'))
+                        ->modalHeading(fn (): string => __('Export entities to CSV', ['label' => static::getPluralModelLabel()]))
+                        ->modalSubmitActionLabel(__('Start'))
+                        ->color('primary')
+                        ->icon('heroicon-m-wrench-screwdriver')
+                        ->requiresConfirmation()
+                        ->modalIcon('heroicon-o-wrench-screwdriver')
+                        ->action(function (array $ids) {
+                            ExportTasks::dispatch($ids);
+                            Notification::make()
+                                ->title(__('Requested entities were pushed to the queue.'))
+                                ->success()
+                                ->send();
+                        })
+                        ->deselectRecordsAfterCompletion()
                 ]),
             ])
             ->emptyStateActions([
