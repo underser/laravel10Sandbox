@@ -269,4 +269,14 @@ class CountryProvider
     {
         return $this->countries;
     }
+
+    public function getHtmlSelectOptions(): Collection
+    {
+        return $this->getCountries()->map(function ($country) {
+            return [
+                'label' => $country['name'],
+                'value' => $country['code']
+            ];
+        });
+    }
 }

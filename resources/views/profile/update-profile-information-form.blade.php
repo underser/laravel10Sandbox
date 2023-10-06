@@ -1,3 +1,6 @@
+@php
+    $countries = resolve(\App\Services\CountryProvider::class)->getHtmlSelectOptions()
+@endphp
 <x-form-section submit="updateProfileInformation">
     <x-slot name="title">
         {{ __('Profile Information') }}
@@ -80,6 +83,13 @@
                     </p>
                 @endif
             @endif
+        </div>
+
+        <!-- Country -->
+        <div class="col-span-6 sm:col-span-4">
+            <x-label for="country" value="{{ __('Country') }}" />
+            <x-select id="country" class="mt-1 block w-full" :options="$countries" wire:model="state.country_code" required autocomplete="country" />
+            <x-input-error for="country" class="mt-2" />
         </div>
     </x-slot>
 

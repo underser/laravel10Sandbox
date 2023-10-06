@@ -24,8 +24,6 @@
         <x-banner />
 
         <div class="min-h-screen bg-gray-100 {{ $contentWrapClasses }}">
-            @livewire('navigation-menu')
-
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white shadow">
