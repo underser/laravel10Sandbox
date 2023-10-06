@@ -7,6 +7,7 @@ use App\Http\Requests\Api\V1\Tasks\Store;
 use App\Http\Requests\Api\V1\Tasks\Update;
 use App\Http\Resources\V1\TaskResource;
 use App\Models\Task;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -15,9 +16,16 @@ class TasksController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return TaskResource::collection(Task::withAll()->paginate());
+        $tasks = Task::query()->withAll();
+        $filters = array_filter($request->only(['id', 'title', 'description']));
+        $tasks->when(count($filters), function (Builder $query) use ($filters) {
+            collect($filters)->each(
+                fn($filterValue, $filterName) => $query->where($filterName, 'like', '%'. $filterValue . '%')
+            );
+        });
+        return TaskResource::collection($tasks->paginate());
     }
 
     /**
