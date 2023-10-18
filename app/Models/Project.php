@@ -9,16 +9,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection as BaseCollection;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use JeroenG\Explorer\Application\Aliased;
+use JeroenG\Explorer\Application\Explored;
+use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Project extends Model implements HasMedia
+class Project extends Model implements HasMedia, Explored, Aliased
 {
-    use HasFactory;
-    use InteractsWithMedia;
-    use PaginatorDefaults;
+    use HasFactory, InteractsWithMedia, PaginatorDefaults, Searchable;
 
     public const MEDIA_GALLERY_KEY = 'project-images-main';
 
@@ -65,5 +67,31 @@ class Project extends Model implements HasMedia
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function makeSearchableUsing(BaseCollection $models): BaseCollection
+    {
+        return $models->load(['user', 'client', 'status']);
+    }
+
+    public function mappableAs(): array
+    {
+        return [
+            'id' => 'keyword',
+            'title' => 'text',
+            'description' => 'text',
+            'status' => 'text',
+        ];
+    }
+
+    public function toSearchableArray()
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'status' => $this->status->status,
+            'user' => $this->user->id,
+            'client' => $this->client->id,
+        ];
     }
 }

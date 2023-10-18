@@ -8,14 +8,19 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection as BaseCollection;
+use JeroenG\Explorer\Application\Aliased;
+use JeroenG\Explorer\Application\Explored;
+use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Task extends Model implements HasMedia
+class Task extends Model implements HasMedia, Explored, Aliased
 {
     use HasFactory;
     use PaginatorDefaults;
     use InteractsWithMedia;
+    use Searchable;
 
     public const MEDIA_GALLERY_KEY = 'task-images-main';
 
@@ -47,5 +52,29 @@ class Task extends Model implements HasMedia
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function makeSearchableUsing(BaseCollection $models): BaseCollection
+    {
+        return $models->load(['project', 'status', 'user']);
+    }
+
+    public function mappableAs(): array
+    {
+        return [
+            'id' => 'keyword',
+            'title' => 'text',
+            'status' => 'text',
+        ];
+    }
+
+    public function toSearchableArray()
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'status' => $this->status->status,
+            'user' => $this->user->id,
+        ];
     }
 }
