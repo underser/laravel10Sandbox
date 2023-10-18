@@ -22,7 +22,8 @@ class ProjectResource extends JsonResource
             'client' => $this->whenLoaded('client', fn() => $this->client->name),
             'project_status' => $this->whenLoaded('status', fn() => $this->status->status),
             'deadline' => $this->deadline->format('m/d/Y'),
-            'tasks' => TaskResource::collection($this->whenLoaded('tasks'))
+            'tasks' => TaskResource::collection($this->whenLoaded('tasks')),
+            'tasks_count' => $this->whenCounted('tasks'),
         ];
     }
 }

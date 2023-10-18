@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\V1\ClientsController;
 use App\Http\Controllers\Api\V1\CustomersController;
 use App\Http\Controllers\Api\V1\ProjectsController;
+use App\Http\Controllers\Api\V1\SearchSuggestions;
 use App\Http\Controllers\Api\V1\TasksController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,4 +25,6 @@ Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'v1', 'as' => 'api.'
     Route::apiResource('clients', ClientsController::class);
     Route::apiResource('projects', ProjectsController::class);
     Route::apiResource('tasks', TasksController::class);
+
+    Route::get('search/suggestions', SearchSuggestions::class);
 });
