@@ -2,9 +2,21 @@
 
 namespace App\Http\Resources\V1;
 
+use App\Models\ProjectStatus;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $title
+ * @property string $description
+ * @property User $user
+ * @property User $client
+ * @property ProjectStatus $status
+ * @property Carbon $deadline
+ */
 class ProjectResource extends JsonResource
 {
     /**

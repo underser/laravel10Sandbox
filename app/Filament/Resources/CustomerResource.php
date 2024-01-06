@@ -7,7 +7,6 @@ use App\Filament\Resources\CustomerResource\RelationManagers;
 use App\Models\User;
 use App\Models\UserRoles;
 use App\Services\CountryProvider;
-use Filament\Facades\Filament;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -24,17 +23,22 @@ class CustomerResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->role(UserRoles::USER->value);
+        /** @var Builder<User> $customerQuery */
+        $customerQuery = parent::getEloquentQuery();
+
+        return $customerQuery->role(UserRoles::USER->value);
     }
 
     public static function form(Form $form): Form
     {
         /** @var CountryProvider $countryProvider */
         $countryProvider = resolve(CountryProvider::class);
-        match ($form->getOperation()) {
-            'create' => $formTitle = __('Create new project'),
-            'edit' => $formTitle = __('Update project')
+        $formTitle = match ($form->getOperation()) {
+            'create' =>  __('Create new project'),
+            'edit' => __('Update project'),
+            default => __('Project Action')
         };
+
         return $form
             ->schema([
                 Forms\Components\Section::make($formTitle)->schema([

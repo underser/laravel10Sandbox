@@ -21,16 +21,23 @@ class ClientResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
+    /**
+     * @return Builder<User>
+     */
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->role(UserRoles::CLIENT->value);
+        /** @var Builder<User> $clientBuilder */
+        $clientBuilder = parent::getEloquentQuery();
+
+        return $clientBuilder->role(UserRoles::CLIENT->value);
     }
 
     public static function form(Form $form): Form
     {
-        match ($form->getOperation()) {
-            'create' => $formTitle = __('Create new project'),
-            'edit' => $formTitle = __('Update project')
+        $formTitle = match ($form->getOperation()) {
+            'create' =>  __('Create new project'),
+            'edit' => __('Update project'),
+            default => __('Manage project')
         };
 
         return $form

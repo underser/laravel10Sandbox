@@ -24,9 +24,10 @@ class ProjectResource extends Resource
 
     public static function form(Form $form): Form
     {
-        match ($form->getOperation()) {
-            'create' => $formTitle = __('Create new project'),
-            'edit' => $formTitle = __('Update project')
+        $formTitle = match ($form->getOperation()) {
+            'create' => __('Create new project'),
+            'edit' => __('Update project'),
+            default => ''
         };
         return $form
             ->schema([
@@ -51,19 +52,19 @@ class ProjectResource extends Resource
                         ->exists(table: User::class, column: 'id'),
                     Forms\Components\Select::make('project_status_id')
                         ->label(__('Status'))
-                        ->options(ProjectStatus::all()->pluck('status', 'id'))
+                        ->options(ProjectStatus::query()->pluck('status', 'id'))
                         ->exists(table: ProjectStatus::class, column: 'id')
                         ->rules([
                             fn() => static function (string $attribute, $value, Closure $fail) use ($form) {
+                                /** @var ?Project $project */
+                                $project = $form->getRecord();
+                                $requestedProjectStatusName = ProjectStatus::find($value)->status;
+
+                                if ($project->status->status === $requestedProjectStatusName) {
+                                    return;
+                                }
+
                                 try {
-                                    /** @var Project $project */
-                                    $project = $form->getRecord();
-                                    $requestedProjectStatusName = ProjectStatus::find($value)->status;
-
-                                    if ($project->status->status === $requestedProjectStatusName) {
-                                        return;
-                                    }
-
                                     $project?->state()->{Str::camel($requestedProjectStatusName)}();
                                 } catch (StateException $e) {
                                     $fail(__('Project cannot be moved to :Status', ['status' => $requestedProjectStatusName]));

@@ -2,9 +2,21 @@
 
 namespace App\Http\Resources\V1;
 
+use App\Models\Project;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $country_code
+ * @property string $phone
+ * @property string $vat
+ * @property string $address
+ * @property Collection<Project> $projects
+ */
 class ClientResource extends JsonResource
 {
     /**

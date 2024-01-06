@@ -7,6 +7,7 @@ use App\Services\CountryProvider;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 
 class UpdateUserProfileInformation implements UpdatesUserProfileInformation
@@ -14,7 +15,8 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     /**
      * Validate and update the given user's profile information.
      *
-     * @param  array<string, string>  $input
+     * @param array<string, string|object> $input
+     * @throws ValidationException
      */
     public function update(User $user, array $input): void
     {
@@ -25,6 +27,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'country' => Rule::in(resolve(CountryProvider::class)->getCountries()->pluck('code')),
         ])->validateWithBag('updateProfileInformation');
 
+        /** \Livewire\Features\SupportFileUploads\TemporaryUploadedFile $input['photo'] */
         if (isset($input['photo'])) {
             $user->updateProfilePhoto($input['photo']);
         }
