@@ -28,9 +28,10 @@ class TaskResource extends Resource
 
     public static function form(Form $form): Form
     {
-        match ($form->getOperation()) {
-            'create' => $formTitle = __('Create new project'),
-            'edit' => $formTitle = __('Update project')
+        $formTitle = match ($form->getOperation()) {
+            'create' => __('Create new task'),
+            'edit' => __('Update task'),
+            default => ''
         };
 
         return $form
@@ -41,7 +42,7 @@ class TaskResource extends Resource
                         ->maxLength(50),
                     Forms\Components\Select::make('project_id')
                         ->label(__('Assigned to Project'))
-                        ->options(Project::all(['title', 'id'])->pluck('title', 'id'))
+                        ->options(Project::query()->pluck('title', 'id'))
                         ->exists(table: Project::class, column: 'id'),
                     Forms\Components\Textarea::make('description')->label(__('Description')),
                     Forms\Components\SpatieMediaLibraryFileUpload::make('image')
@@ -58,10 +59,10 @@ class TaskResource extends Resource
                             }
                         ]),
                     Forms\Components\Select::make('user_id')->label(__('Assigned To'))
-                        ->options(User::all(['name', 'id'])->pluck('name', 'id'))
+                        ->options(User::query()->pluck('name', 'id'))
                         ->exists(User::class, column: 'id'),
                     Forms\Components\Select::make('task_status_id')->label(__('Status'))
-                        ->options(TaskStatus::all(['id', 'status'])->pluck('status', 'id'))
+                        ->options(TaskStatus::query()->pluck('status', 'id'))
                         ->exists(TaskStatus::class, column: 'id'),
                 ])
             ]);

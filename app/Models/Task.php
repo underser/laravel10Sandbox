@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Database\Eloquent\Collection as BaseCollection;
 use JeroenG\Explorer\Application\Aliased;
 use JeroenG\Explorer\Application\Explored;
 use Laravel\Scout\Searchable;

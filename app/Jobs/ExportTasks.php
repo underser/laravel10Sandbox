@@ -36,7 +36,10 @@ class ExportTasks implements ShouldQueue
         $stream = fopen(storage_path('exports/' . $filename), 'wb');
 
         fputcsv($stream, ['title', 'description', 'estimation', 'user', 'project', 'status']);
-        $this->records->each(function (Task $record) use ($stream) {
+
+        // @see https://github.com/phpstan/phpstan/issues/5060
+        // @phpstan-ignore-next-line
+        $this->records->each(function (Task $record) use ($stream): void {
             fputcsv($stream, [
                 $record->title,
                 $record->description,

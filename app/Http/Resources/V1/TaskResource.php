@@ -2,9 +2,21 @@
 
 namespace App\Http\Resources\V1;
 
+use App\Models\Project;
+use App\Models\ProjectStatus;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property int $id
+ * @property string $title
+ * @property string $description
+ * @property string $estimation
+ * @property User $user
+ * @property Project $project
+ * @property ProjectStatus $status
+ */
 class TaskResource extends JsonResource
 {
     /**

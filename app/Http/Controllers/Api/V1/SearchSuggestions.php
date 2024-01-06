@@ -31,7 +31,8 @@ class SearchSuggestions extends Controller
                     Task::search($term)
                         ->query(
                             fn(Builder $query) =>
-                                $query->limit(5)->withAll())
+                                $query->limit(5)->with(['project', 'status', 'user'])
+                        )
                         ->get()
                 )
             ];
