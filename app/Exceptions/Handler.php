@@ -29,7 +29,7 @@ class Handler extends ExceptionHandler
             if ($request->is('api/v1/*')) {
                 return response()->json([
                     'message' => 'Entity not found.'
-                ]);
+                ])->setStatusCode(404);
             }
         });
     }

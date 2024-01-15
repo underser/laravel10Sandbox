@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Feature\Jetstream;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,7 +27,11 @@ class ProfileInformationTest extends TestCase
         $this->actingAs($user = User::factory()->create());
 
         Livewire::test(UpdateProfileInformationForm::class)
-            ->set('state', ['name' => 'Test Name', 'email' => 'test@example.com'])
+            ->set('state', [
+                'name' => 'Test Name',
+                'email' => 'test@example.com',
+                'country' => 'US'
+            ])
             ->call('updateProfileInformation');
 
         $this->assertEquals('Test Name', $user->fresh()->name);

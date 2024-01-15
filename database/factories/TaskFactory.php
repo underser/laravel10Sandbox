@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Project;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,6 +22,7 @@ class TaskFactory extends Factory
             'title' => $this->faker->sentence(),
             'description' => $this->faker->text(600),
             'estimation' => $this->faker->randomNumber(),
+            'user_id' => User::factory()->create(),
         ];
     }
 }

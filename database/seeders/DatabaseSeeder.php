@@ -61,7 +61,7 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    private function seedRolesAndPermission()
+    public static function seedRolesAndPermission(): void
     {
         $permissions = [
             'manage users',
