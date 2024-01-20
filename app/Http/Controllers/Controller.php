@@ -14,7 +14,7 @@ class Controller extends BaseController
     protected function checkUserAbility(?string $ability = null): void
     {
         if ($ability && auth()->user()?->cannot($ability)) {
-            abort(Response::HTTP_FORBIDDEN);
+            abort(Response::HTTP_FORBIDDEN, __('This action is unauthorized.'));
         }
     }
 }

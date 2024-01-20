@@ -2,8 +2,12 @@
 
 namespace App\Http\Requests\Api\V1\Projects;
 
+use App\Models\ProjectStatus;
+use App\Models\UserRoles;
+use App\Rules\Role;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Symfony\Component\HttpFoundation\InputBag;
 
 class Update extends FormRequest
 {
@@ -23,20 +27,47 @@ class Update extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'sometimes|required',
+            'name' => 'sometimes|required',
             'description' => 'string',
             'image' => 'file|max:2048|mimes:jpg,png',
-            'user_id' => [
-                Rule::exists('users', 'id')
+            'assigned_to' => [
+                Rule::exists('users', 'id'),
+                new Role([UserRoles::USER, UserRoles::PROJECT_MANAGER])
             ],
-            'client_id' => [
-                Rule::exists('users', 'id')
+            'client' => [
+                Rule::exists('users', 'id'),
+                new Role([UserRoles::CLIENT])
             ],
-            'project_status_id' => [
-                Rule::exists('project_statuses', 'id')
+            'project_status' => [
+                Rule::exists('project_statuses', 'status')
             ],
-            'deadline' => 'date'
+            'deadline' => 'date_format:m/d/Y'
         ];
 
+    }
+
+    protected function passedValidation(): void
+    {
+        /** @var InputBag $inputSource */
+        $inputSource = $this->getInputSource();
+
+        if ($this->input('name')) {
+            $inputSource->add(['title' => $this->input('name')]);
+        }
+
+        if ($this->input('assigned_to')) {
+            $inputSource->add(['user_id' => $this->input('assigned_to')]);
+        }
+
+        if ($this->input('client')) {
+            $inputSource->add(['client_id' => $this->input('client')]);
+        }
+
+        if ($this->input('project_status')) {
+            $inputSource->add([
+                'project_status_id' =>
+                    ProjectStatus::query()->whereStatus($this->input('project_status'))->first(['id'])?->id
+            ]);
+        }
     }
 }

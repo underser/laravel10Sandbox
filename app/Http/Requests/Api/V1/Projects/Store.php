@@ -2,6 +2,9 @@
 
 namespace App\Http\Requests\Api\V1\Projects;
 
+use App\Models\ProjectStatus;
+use App\Models\UserRoles;
+use App\Rules\Role;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -23,22 +26,34 @@ class Store extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|required',
+            'name' => 'required',
             'description' => 'string',
             'image' => 'file|max:2048|mimes:jpg,png',
-            'user_id' => [
+            'assigned_to' => [
                 'required',
-                Rule::exists('users', 'id')
+                Rule::exists('users', 'id'),
+                new Role([UserRoles::USER, UserRoles::PROJECT_MANAGER])
             ],
-            'client_id' => [
+            'client' => [
                 'required',
-                Rule::exists('users', 'id')
+                Rule::exists('users', 'id'),
+                new Role([UserRoles::CLIENT])
             ],
-            'project_status_id' => [
+            'project_status' => [
                 'required',
-                Rule::exists('project_statuses', 'id')
+                Rule::exists('project_statuses', 'status')
             ],
-            'deadline' => 'required|date'
+            'deadline' => 'required|date_format:m/d/Y'
         ];
+    }
+
+    protected function passedValidation(): void
+    {
+        $this->getInputSource()->add([
+            'title' => $this->input('name'),
+            'user_id' => $this->input('assigned_to'),
+            'client_id' => $this->input('client'),
+            'project_status_id' => ProjectStatus::query()->whereStatus($this->input('project_status'))->first(['id'])?->id
+        ]);
     }
 }

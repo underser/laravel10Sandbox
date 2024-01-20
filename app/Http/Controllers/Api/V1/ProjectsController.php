@@ -22,10 +22,17 @@ class ProjectsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Store $request)
+    public function store(Store $request): ProjectResource
     {
         /** @var Project $project */
-        $project = Project::factory()->create($request->safe()->except('image'));
+        $project = Project::factory()->create($request->only([
+            'title',
+            'description',
+            'user_id',
+            'client_id',
+            'project_status_id',
+            'deadline'
+        ]));
 
         if ($request->hasFile('image')) {
             $project->addMediaFromRequest('image')->toMediaCollection(Project::MEDIA_GALLERY_KEY);
@@ -37,7 +44,7 @@ class ProjectsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Project $project)
+    public function show(Project $project): ProjectResource
     {
         return new ProjectResource($project->loadMissing(['user', 'client', 'tasks', 'status']));
     }
@@ -45,15 +52,22 @@ class ProjectsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Update $request, Project $project)
+    public function update(Update $request, Project $project): ProjectResource
     {
-        $project->update($request->safe()->except('image'));
+        $project->update($request->only([
+            'title',
+            'description',
+            'user_id',
+            'client_id',
+            'project_status_id',
+            'deadline'
+        ]));
 
         if ($request->hasFile('image')) {
             $project->addMediaFromRequest('image')->toMediaCollection(Project::MEDIA_GALLERY_KEY);
         }
 
-        return new ProjectResource($project);
+        return new ProjectResource($project->loadMissing('tasks'));
     }
 
     /**
