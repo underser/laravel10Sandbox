@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api\V1\Tasks;
 
+use App\Models\TaskStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,7 +28,7 @@ class Store extends FormRequest
             'description' => 'string',
             'image' => 'file|max:2048|mimes:jpg,png',
             'estimation' => 'numeric',
-            'user_id' => [
+            'assigned_to' => [
                 'required',
                 Rule::exists('users', 'id')
             ],
@@ -35,10 +36,18 @@ class Store extends FormRequest
                 'required',
                 Rule::exists('projects', 'id')
             ],
-            'task_status_id' => [
+            'task_status' => [
                 'required',
-                Rule::exists('task_statuses', 'id')
+                Rule::exists('task_statuses', 'status')
             ]
         ];
+    }
+
+    protected function passedValidation(): void
+    {
+        $this->getInputSource()->add([
+            'user_id' => $this->input('assigned_to'),
+            'task_status_id' => TaskStatus::whereStatus($this->input('task_status'))->value('id'),
+        ]);
     }
 }
