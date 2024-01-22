@@ -4,9 +4,8 @@ namespace Feature\Api\V1\Customers;
 
 use App\Models\User;
 use App\Models\UserRoles;
-use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\Feature\Api\V1\ApiTestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Feature\Api\V1\ApiTestCase;
 
 class DestroyTest extends ApiTestCase
 {

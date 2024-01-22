@@ -46,27 +46,37 @@ class ShowTest extends ApiTestCase
         )->assertUnauthorized();
     }
 
-    public function test_authorized_users_with_any_roles_can_access_project_endpoint(): void
+    public function test_users_with_client_role_can_access_project(): void
     {
         $clientToken = User::factory()
             ->create()
             ->assignRole(UserRoles::CLIENT->value)
             ->createToken('clientToken')
             ->plainTextToken;
-        $userToken = User::factory()
-            ->create()
-            ->assignRole(UserRoles::USER->value)
-            ->createToken('clientToken')
-            ->plainTextToken;
+
+        $this->getJson($this->endpoint, $this->getAuthorizationHeader($clientToken))->assertOk();
+    }
+
+    public function test_users_with_project_manager_role_can_access_project(): void
+    {
         $projectManagerToken = User::factory()
             ->create()
             ->assignRole(UserRoles::PROJECT_MANAGER->value)
-            ->createToken('clientToken')
+            ->createToken('projectManagerToken')
             ->plainTextToken;
 
-        foreach ([$clientToken, $userToken, $projectManagerToken] as $token) {
-            $this->getJson($this->endpoint, $this->getAuthorizationHeader($token))->assertOk();
-        }
+        $this->getJson($this->endpoint, $this->getAuthorizationHeader($projectManagerToken))->assertOk();
+    }
+
+    public function test_users_with_user_role_can_access_project(): void
+    {
+        $userToken = User::factory()
+            ->create()
+            ->assignRole(UserRoles::USER->value)
+            ->createToken('userToken')
+            ->plainTextToken;
+
+        $this->getJson($this->endpoint, $this->getAuthorizationHeader($userToken))->assertOk();
     }
 
     public function test_project_endpoint_return_correct_data(): void

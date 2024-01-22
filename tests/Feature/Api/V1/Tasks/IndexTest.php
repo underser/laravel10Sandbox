@@ -128,4 +128,9 @@ class IndexTest extends ApiTestCase
                     )
             );
     }
+
+    public function test_search_over_tasks_works(): void
+    {
+        $this->markTestIncomplete('Test that seach over id, title and description fields works properly.');
+    }
 }

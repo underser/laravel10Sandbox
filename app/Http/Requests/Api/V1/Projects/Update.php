@@ -66,7 +66,7 @@ class Update extends FormRequest
         if ($this->input('project_status')) {
             $inputSource->add([
                 'project_status_id' =>
-                    ProjectStatus::query()->whereStatus($this->input('project_status'))->first(['id'])?->id
+                    ProjectStatus::query()->whereStatus($this->input('project_status'))->value('id')
             ]);
         }
     }

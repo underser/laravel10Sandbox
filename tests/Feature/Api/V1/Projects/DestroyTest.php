@@ -12,7 +12,6 @@ use App\Models\UserRoles;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
-use stdClass;
 use Tests\Feature\Api\V1\ApiTestCase;
 
 class DestroyTest extends ApiTestCase

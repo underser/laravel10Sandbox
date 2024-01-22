@@ -53,7 +53,7 @@ class Store extends FormRequest
             'title' => $this->input('name'),
             'user_id' => $this->input('assigned_to'),
             'client_id' => $this->input('client'),
-            'project_status_id' => ProjectStatus::query()->whereStatus($this->input('project_status'))->first(['id'])?->id
+            'project_status_id' => ProjectStatus::query()->whereStatus($this->input('project_status'))->value('id')
         ]);
     }
 }

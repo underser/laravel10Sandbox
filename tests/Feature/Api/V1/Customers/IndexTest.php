@@ -4,9 +4,9 @@ namespace Tests\Feature\Api\V1\Customers;
 
 use App\Models\User;
 use App\Models\UserRoles;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\Feature\Api\V1\ApiTestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class IndexTest extends ApiTestCase
 {
