@@ -6,7 +6,7 @@ namespace Tests\Feature\Api\V1;
 use App\Models\User;
 use App\Models\UserRoles;
 use Database\Seeders\DatabaseSeeder;
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Tests\TestCase as BaseTestCase;
 use Tests\CreatesApplication;
 
 abstract class ApiTestCase extends BaseTestCase
