@@ -61,7 +61,7 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    private function seedRolesAndPermission()
+    public static function seedRolesAndPermission(): void
     {
         $permissions = [
             'manage users',
@@ -75,22 +75,8 @@ class DatabaseSeeder extends Seeder
         }
 
         Role::create(['name' => UserRoles::ADMINISTRATOR->value])->givePermissionTo(Permission::all());
-        Role::create(['name' => UserRoles::CLIENT->value])->givePermissionTo(
-            Permission::query()->where([
-                ['name', '=', 'manage projects'],
-                ['name', '=', 'manage tasks']
-            ])
-        );
-        Role::create(['name' => UserRoles::PROJECT_MANAGER->value])->givePermissionTo(
-            Permission::query()->where([
-                ['name', '=', 'manage projects'],
-                ['name', '=', 'manage tasks']
-            ])
-        );
-        Role::create(['name' => UserRoles::USER->value])->givePermissionTo(
-            Permission::query()->where([
-                ['name', '=', 'manage tasks']
-            ])
-        );
+        Role::create(['name' => UserRoles::CLIENT->value])->givePermissionTo(['manage tasks', 'manage projects']);
+        Role::create(['name' => UserRoles::PROJECT_MANAGER->value])->givePermissionTo(['manage tasks', 'manage projects']);
+        Role::create(['name' => UserRoles::USER->value])->givePermissionTo(['manage tasks']);
     }
 }

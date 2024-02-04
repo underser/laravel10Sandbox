@@ -8,6 +8,7 @@ use App\Http\Requests\Api\V1\Customers\Update;
 use App\Http\Resources\V1\CustomerResource;
 use App\Models\User;
 use App\Models\UserRoles;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -22,14 +23,6 @@ class CustomersController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Store $request)
-    {
-        return new CustomerResource(User::factory()->create($request->validated()));
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(string $id)
@@ -38,33 +31,17 @@ class CustomersController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     */
-    public function update(Update $request, User $user)
-    {
-        $this->validateUserRoleIsCustomer($user);
-
-        $user->update($request->validated());
-        return new CustomerResource($user);
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
     public function destroy(User $user)
     {
-        $this->validateUserRoleIsCustomer($user);
-
-        $user->delete();
-        return response(null, Response::HTTP_NO_CONTENT);
-    }
-
-    private function validateUserRoleIsCustomer(User $user): void
-    {
         if (!$user->hasRole(UserRoles::USER->value)) {
             $model = User::class;
             $id = $user->id;
-            throw new NotFoundHttpException(__("No query results for model [{$model}] {$id}"));
+            throw new NotFoundHttpException(__("No query results for model [{$model}] {$id}"), code: 404);
         }
+
+        $user->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

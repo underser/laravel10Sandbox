@@ -9,6 +9,7 @@ use App\Http\Resources\V1\TaskResource;
 use App\Models\Task;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
 class TasksController extends Controller
@@ -16,7 +17,7 @@ class TasksController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
         $tasks = Task::query()->withAll();
         $filters = array_filter($request->only(['id', 'title', 'description']));
@@ -31,10 +32,17 @@ class TasksController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Store $request)
+    public function store(Store $request): TaskResource
     {
         /** @var Task $task */
-        $task = Task::factory()->create($request->safe()->except('image'));
+        $task = Task::factory()->create($request->only([
+            'title',
+            'description',
+            'estimation',
+            'user_id',
+            'project_id',
+            'task_status_id'
+        ]));
 
         if ($request->hasFile('image')) {
             $task->addMediaFromRequest('image')->toMediaCollection(Task::MEDIA_GALLERY_KEY);
@@ -46,7 +54,7 @@ class TasksController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Task $task)
+    public function show(Task $task): TaskResource
     {
         return new TaskResource($task->loadMissing(['project', 'status', 'user']));
     }
@@ -54,9 +62,16 @@ class TasksController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Update $request, Task $task)
+    public function update(Update $request, Task $task): TaskResource
     {
-        $task->update($request->safe()->except('image'));
+        $task->update($request->only([
+            'title',
+            'description',
+            'estimation',
+            'user_id',
+            'project_id',
+            'task_status_id'
+        ]));
 
         if ($request->hasFile('image')) {
             $task->addMediaFromRequest('image')->toMediaCollection(Task::MEDIA_GALLERY_KEY);
@@ -68,7 +83,7 @@ class TasksController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Task $task)
+    public function destroy(Task $task): Response
     {
         $this->checkUserAbility('manage tasks');
 
