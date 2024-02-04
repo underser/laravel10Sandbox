@@ -8,10 +8,6 @@ on:
 jobs:
     main:
         runs-on: ubuntu-latest
-        env:
-            DB_HOST: 127.0.0.1
-            DB_PORT: ${{ job.services.db.ports['3306'] }}
-            SCOUT_DRIVER: elastic
         services:
             db:
                 image: mariadb:10.4
@@ -45,5 +41,13 @@ jobs:
               run: chmod -R 777 storage bootstrap/cache
             - name: Index models.
               run: php artisan scout:import 'App\Models\Project' && php artisan scout:import 'App\Models\Task'
+              env:
+                  DB_HOST: 127.0.0.1
+                  DB_PORT: ${{ job.services.db.ports['3306'] }}
+                  SCOUT_DRIVER: elastic
             - name: Execute tests (Unit and Feature tests) via PHPUnit
               run: php artisan test --parallel
+              env:
+                  DB_HOST: 127.0.0.1
+                  DB_PORT: ${{ job.services.db.ports['3306'] }}
+                  SCOUT_DRIVER: elastic
