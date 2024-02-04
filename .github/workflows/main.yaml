@@ -8,7 +8,6 @@ on:
 jobs:
     main:
         runs-on: ubuntu-latest
-        container: ubuntu
         services:
             db:
                 image: mariadb:10.4
@@ -42,6 +41,7 @@ jobs:
               run: chmod -R 777 storage bootstrap/cache
             - name: Execute tests (Unit and Feature tests) via PHPUnit
               env:
-                  DB_HOST: db
+                  DB_HOST: 127.0.0.1
+                  DB_PORT: ${{ job.services.db.ports['3306'] }}
                   SCOUT_DRIVER: elastic
               run: php artisan test --parallel
