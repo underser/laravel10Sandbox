@@ -20,7 +20,7 @@ readonly class Role implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        /** @var User $user */
+        /** @var ?User $user */
         $user = User::query()->with('roles')->find($value, ['id']);
 
         if ($user && !$user->hasAnyRole(collect($this->roles)->map(fn (UserRoles $role) => $role->value)->toArray())) {
