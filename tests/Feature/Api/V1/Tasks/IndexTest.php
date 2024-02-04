@@ -129,8 +129,67 @@ class IndexTest extends ApiTestCase
             );
     }
 
-    public function test_search_over_tasks_works(): void
+    public function test_tasks_can_be_filtered_by_id(): void
     {
-        $this->markTestIncomplete('Test that seach over id, title and description fields works properly.');
+        $taskStatus = TaskStatus::factory()->create(['status' => 'Open']);
+
+        Task::factory(4)->create([
+            'project_id' => $this->project1->id,
+            'task_status_id' => $taskStatus
+        ]);
+
+        $lastCreatedTask = Task::factory()->create([
+            'project_id' => $this->project2->id,
+            'task_status_id' => $taskStatus
+        ]);
+
+        $this->getJson($this->endpoint . '/?id=' . $lastCreatedTask->id, $this->adminAuthHeader)
+            ->assertJson(fn (AssertableJson $json) =>
+                $json->hasAll(['data', 'links', 'meta'])
+                    ->has('data.0', fn (AssertableJson $json) =>
+                        $json->where('id', $lastCreatedTask->id)
+                            ->etc()
+                    )
+            );
+    }
+
+    public function test_tasks_can_be_filtered_by_title(): void
+    {
+        $title = 'Unique task title';
+
+        Task::factory()->create([
+            'title' => $title,
+            'project_id' => $this->project2->id,
+            'task_status_id' => TaskStatus::factory()->create(['status' => 'Open'])
+        ]);
+
+        $this->getJson($this->endpoint . '/?title=' . $title, $this->adminAuthHeader)
+            ->assertJson(fn (AssertableJson $json) =>
+            $json->hasAll(['data', 'links', 'meta'])
+                ->has('data', 1, fn (AssertableJson $json) =>
+                $json->where('title', $title)
+                    ->etc()
+                )
+            );
+    }
+
+    public function test_tasks_can_by_filtered_by_description(): void
+    {
+        $description = 'Unique task description';
+
+        Task::factory()->create([
+            'description' => $description,
+            'project_id' => $this->project2->id,
+            'task_status_id' => TaskStatus::factory()->create(['status' => 'Open'])
+        ]);
+
+        $this->getJson($this->endpoint . '/?description=' . $description, $this->adminAuthHeader)
+            ->assertJson(fn (AssertableJson $json) =>
+            $json->hasAll(['data', 'links', 'meta'])
+                ->has('data', 1, fn (AssertableJson $json) =>
+                $json->where('description', $description)
+                    ->etc()
+                )
+            );
     }
 }
