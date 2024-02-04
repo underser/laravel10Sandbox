@@ -43,6 +43,9 @@ jobs:
               run: php artisan scout:import 'App\Models\Project' && php artisan scout:import 'App\Models\Task'
               env:
                   DB_HOST: 127.0.0.1
+                  DB_DATABASE: testing
+                  DB_USERNAME: root
+                  DB_PASSWORD: root
                   DB_PORT: ${{ job.services.db.ports['3306'] }}
                   SCOUT_DRIVER: elastic
             - name: Execute tests (Unit and Feature tests) via PHPUnit
