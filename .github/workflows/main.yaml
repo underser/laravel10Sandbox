@@ -5,14 +5,13 @@ on:
     pull_request:
         branches: [ ]
 
-env:
-    DB_HOST: 127.0.0.1
-    DB_PORT: ${{ job.services.db.ports['3306'] }}
-    SCOUT_DRIVER: elastic
-
 jobs:
     main:
         runs-on: ubuntu-latest
+        env:
+            DB_HOST: 127.0.0.1
+            DB_PORT: ${{ job.services.db.ports['3306'] }}
+            SCOUT_DRIVER: elastic
         services:
             db:
                 image: mariadb:10.4
