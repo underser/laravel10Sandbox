@@ -19,3 +19,4 @@ yarn-error.log
 /.vscode
 /phpstan.neon
 /storage/exports
+/.dbdata
