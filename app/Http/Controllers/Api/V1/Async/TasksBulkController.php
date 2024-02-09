@@ -11,23 +11,18 @@ use Illuminate\Http\Request;
 
 class TasksBulkController extends Controller
 {
+    use DispatchJobsTrait;
+
     public function __construct(
         private readonly Dispatcher $batchDispatcher,
-        private readonly Application $serviceContainer
+        private readonly Application $serviceContainer,
+        private readonly string $job = ImportTask::class
     ) {}
 
     public function __invoke(Request $request): JsonResponse
     {
-        $jobs = [];
-
-        foreach ($request->getPayload()->all() as $taskItem) {
-            $jobs[] = $this->serviceContainer->make(ImportTask::class, ['data' => $taskItem]);
-        }
-
-        $batch = $this->batchDispatcher->batch($jobs)->dispatch();
-
         return response()->json([
-            'batchId' => $batch->id
+            'batchId' => $this->dispatchJobs($request)
         ]);
     }
 }

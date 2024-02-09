@@ -17,15 +17,12 @@ use Illuminate\Validation\ValidationException;
 
 class ImportProject implements ShouldQueue
 {
-    use Batchable, Dispatchable, InteractsWithQueue, Queueable;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, ImportEntityTrait;
 
-    public function __construct(private readonly array $data = [])
-    {}
-
-    public function handle(): void
+    private function validate(): bool|array
     {
         try {
-            $validated = Validator::make($this->data, [
+            return Validator::make($this->data, [
                 'name' => 'required',
                 'description' => 'string',
                 'assigned_to' => [
@@ -44,21 +41,26 @@ class ImportProject implements ShouldQueue
                 ],
                 'deadline' => 'required|date_format:m/d/Y'
             ])->safe()->toArray();
-
-
-            Project::query()->updateOrCreate(
-                [
-                    'title' => $validated['name']
-                ], [
-                    'description' => $validated['description'],
-                    'user_id' => $validated['assigned_to'],
-                    'client_id' => $validated['client'],
-                    'project_status_id' => ProjectStatus::query()->whereStatus($validated['project_status'])->value('id'),
-                    'deadline' => $validated['deadline']
-                ]
-            );
         } catch (ValidationException $e) {
+            $this->saveValidationErrorsToJobHistory($e->errors());
             $this->fail($e);
         }
+
+        return false;
+    }
+
+    private function updateOrCreateEntity(array $data): void
+    {
+        Project::query()->updateOrCreate(
+            [
+                'title' => $data['name']
+            ], [
+                'description' => $data['description'],
+                'user_id' => $data['assigned_to'],
+                'client_id' => $data['client'],
+                'project_status_id' => ProjectStatus::query()->whereStatus($data['project_status'])->value('id'),
+                'deadline' => $data['deadline']
+            ]
+        );
     }
 }

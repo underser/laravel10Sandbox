@@ -11,23 +11,18 @@ use Illuminate\Http\Request;
 
 class ProjectsBulkController extends Controller
 {
+    use DispatchJobsTrait;
+
     public function __construct(
         private readonly Dispatcher $batchDispatcher,
-        private readonly Application $serviceContainer
+        private readonly Application $serviceContainer,
+        private readonly string $job = ImportProject::class,
     ) {}
 
     public function __invoke(Request $request): JsonResponse
     {
-        $jobs = [];
-
-        foreach ($request->getPayload()->all() as $projectItem) {
-            $jobs[] = $this->serviceContainer->make(ImportProject::class, ['data' => $projectItem]);
-        }
-
-        $batch = $this->batchDispatcher->batch($jobs)->dispatch();
-
         return response()->json([
-            'batchId' => $batch->id
+            'batchId' => $this->dispatchJobs($request)
         ]);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Async\BulkDetailedStatus;
 use App\Http\Controllers\Api\V1\Async\ProjectsBulkController;
 use App\Http\Controllers\Api\V1\Async\TasksBulkController;
 use App\Http\Controllers\Api\V1\ClientsController;
@@ -27,4 +28,6 @@ Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'v1', 'as' => 'api.'
     // Async bulk.
     Route::post('async/bulk/projects', ProjectsBulkController::class)->name('async.bulk.projects');
     Route::post('async/bulk/tasks', TasksBulkController::class)->name('async.bulk.tasks');
+    Route::get('async/bulk/{bulkId}/detailed-status', BulkDetailedStatus::class)
+        ->name('async.bulk.detailed-status');
 });

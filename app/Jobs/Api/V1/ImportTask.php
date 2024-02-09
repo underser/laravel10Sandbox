@@ -15,15 +15,12 @@ use Illuminate\Validation\ValidationException;
 
 class ImportTask implements ShouldQueue
 {
-    use Batchable, Dispatchable, InteractsWithQueue, Queueable;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, ImportEntityTrait;
 
-    public function __construct(private readonly array $data = [])
-    {}
-
-    public function handle(): void
+    private function validate(): bool|array
     {
         try {
-            $validated = Validator::make($this->data, [
+            return Validator::make($this->data, [
                 'title' => 'required',
                 'description' => 'string',
                 'estimation' => 'numeric',
@@ -40,21 +37,26 @@ class ImportTask implements ShouldQueue
                     Rule::exists('task_statuses', 'status')
                 ]
             ])->safe()->toArray();
-
-
-            Task::query()->updateOrCreate(
-                [
-                    'title' => $validated['title']
-                ], [
-                    'description' => $validated['description'],
-                    'estimation' => $validated['estimation'],
-                    'user_id' => $validated['assigned_to'],
-                    'project_id' => $validated['project_id'],
-                    'task_status_id' => TaskStatus::whereStatus($validated['task_status'])->value('id'),
-                ]
-            );
         } catch (ValidationException $e) {
+            $this->saveValidationErrorsToJobHistory($e->errors());
             $this->fail($e);
         }
+
+        return false;
+    }
+
+    private function updateOrCreateEntity(array $validated): void
+    {
+        Task::query()->updateOrCreate(
+            [
+                'title' => $validated['title']
+            ], [
+                'description' => $validated['description'],
+                'estimation' => $validated['estimation'],
+                'user_id' => $validated['assigned_to'],
+                'project_id' => $validated['project_id'],
+                'task_status_id' => TaskStatus::whereStatus($validated['task_status'])->value('id'),
+            ]
+        );
     }
 }
