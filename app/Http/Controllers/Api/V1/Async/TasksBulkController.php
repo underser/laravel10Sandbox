@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\V1\Async;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\Api\V1\ImportTask;
-use Illuminate\Bus\Dispatcher;
+use Illuminate\Contracts\Bus\Dispatcher;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
