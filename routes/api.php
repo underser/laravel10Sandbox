@@ -10,18 +10,19 @@ use App\Http\Controllers\Api\V1\SearchSuggestions;
 use App\Http\Controllers\Api\V1\TasksController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'v1', 'as' => 'api.'], function () {
+Route::group(['middleware' => ['auth:sanctum'], 'prefix' => 'v1', 'as' => 'api.'], static function () {
 
-    // CRUD.
-    Route::apiResource('customers', CustomersController::class)
-        ->parameters(['customers' => 'user'])
-        ->only(['index', 'show', 'destroy']);
-    Route::apiResource('clients', ClientsController::class)
-        ->parameters(['clients' => 'user'])
-        ->only(['index', 'show', 'destroy']);
-    Route::apiResource('projects', ProjectsController::class);
-    Route::apiResource('tasks', TasksController::class);
-
+    Route::group(['middleware' => ['apiCache:60']], static function () {
+        // CRUD.
+        Route::apiResource('customers', CustomersController::class)
+            ->parameters(['customers' => 'user'])
+            ->only(['index', 'show', 'destroy']);
+        Route::apiResource('clients', ClientsController::class)
+            ->parameters(['clients' => 'user'])
+            ->only(['index', 'show', 'destroy']);
+        Route::apiResource('projects', ProjectsController::class);
+        Route::apiResource('tasks', TasksController::class);
+    });
     // Search.
     Route::get('search/suggestions', SearchSuggestions::class);
 
